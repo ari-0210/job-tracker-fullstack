@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1f327d9e-4775-4347-bfa9-b77e0e9334cc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/ReadMe.md" beforeDir="false" afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JavaAutoRunManager">
+    <enabled-run-configurations>
+      <run-configuration type="JUnit" name="JobRepositoryTest" />
+    </enabled-run-configurations>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2waKQpDLZzDn1MglszTs0pNIbGU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.JobTrackerApplication.executor": "Run",
+    "JUnit.JobRepositoryTest.executor": "Run",
+    "JUnit.JobRepositoryTest.generateHashedPasswordForTesting.executor": "Coverage",
+    "JUnit.JobRepositoryTest.testSaveAndFindAll.executor": "Run",
+    "JUnit.JobTrackerApplicationTests.contextLoads.executor": "Run",
+    "JUnit.JobTrackerApplicationTests.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/apple/Documents/JobTracker/src/main/resources",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.JobTrackerApplication">
+    <configuration name="JobTrackerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.arii.JobTracker.JobTrackerApplication" />
+      <module name="JobTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arii.JobTracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JobRepositoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JobTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arii.JobTracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arii.JobTracker" />
+      <option name="MAIN_CLASS_NAME" value="com.arii.JobTracker.JobRepositoryTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JobRepositoryTest.generateHashedPasswordForTesting" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JobTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arii.JobTracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arii.JobTracker" />
+      <option name="MAIN_CLASS_NAME" value="com.arii.JobTracker.JobRepositoryTest" />
+      <option name="METHOD_NAME" value="generateHashedPasswordForTesting" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JobRepositoryTest.testSaveAndFindAll" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JobTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arii.JobTracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arii.JobTracker" />
+      <option name="MAIN_CLASS_NAME" value="com.arii.JobTracker.JobRepositoryTest" />
+      <option name="METHOD_NAME" value="testSaveAndFindAll" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JobTrackerApplicationTests.contextLoads" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JobTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.arii.JobTracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.arii.JobTracker" />
+      <option name="MAIN_CLASS_NAME" value="com.arii.JobTracker.JobTrackerApplicationTests" />
+      <option name="METHOD_NAME" value="contextLoads" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.JobTrackerApplication" />
+        <item itemvalue="JUnit.JobRepositoryTest" />
+        <item itemvalue="JUnit.JobRepositoryTest.generateHashedPasswordForTesting" />
+        <item itemvalue="JUnit.JobRepositoryTest.testSaveAndFindAll" />
+        <item itemvalue="JUnit.JobTrackerApplicationTests.contextLoads" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1f327d9e-4775-4347-bfa9-b77e0e9334cc" name="Changes" comment="" />
+      <created>1746274234178</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746274234178</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.springframework.data.mapping.PropertyReferenceException" package="org.springframework.data.mapping" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/JobTracker$JobRepositoryTest_generateHashedPasswordForTesting.ic" NAME="JobRepositoryTest.generateHashedPasswordForTesting Coverage Results" MODIFIED="1749269360606" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>com.arii.JobTracker.*</FILTER>
+    </SUITE>
+  </component>
+</project>

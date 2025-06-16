@@ -1,0 +1,14 @@
+spring.application.name=JobTracker
+spring.datasource.url=jdbc:mysql://localhost:3306/your_db_name
+spring.datasource.username=your_db_username
+spring.datasource.password=YOUR_DATABASE_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=true
+#spring.profiles.active=mybatis
+spring.profiles.active=jpa
+spring.jpa.show-sql=true
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql=TRACE
+jwt.secret=YOUR_SUPER_SECRET_JWT_KEY_HERE_WHICH_IS_VERY_LONG
+jwt.expiration.ms=86400000
