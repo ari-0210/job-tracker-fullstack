@@ -4,6 +4,19 @@
 
 This is a full-stack web application for tracking and managing personal job application records. The front-end is built with Vue.js, the back-end is implemented using Java Spring Boot, and it is deployed with Nginx.
 
+## 主要界面
+
+### 登录和注册页面
+
+这是此项目的用户登录界面和注册新用户界面。
+![登录页面截图](./images/login-page.png)
+![注册页面截图](./images/create-account.png)
+
+### 主页面
+
+这是此项目的主界面。
+![主页面截图](./images/home-page.png)
+
 ## 主要功能
 
 - **用户认证与授权系统 (JWT)**:
