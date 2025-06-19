@@ -35,6 +35,13 @@ This is a full-stack web application for tracking and managing personal job appl
 - **分页**: 对工作列表进行服务器端分页，提升大数据量下的性能。
 - **模糊搜索**: 根据关键词在多个字段（如公司、职位、标签）中进行筛选。
 
+## TODO
+
+-[x]注册功能
+-[]权限管理
+-[]前端优化
+-[]一键把所有记录导出为 CSV 文件或其他格式
+
 ## 技术栈
 
 - **前端**:
