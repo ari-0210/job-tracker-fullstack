@@ -67,10 +67,10 @@ This is a full-stack web application for tracking and managing personal job appl
 
 只要你的机器安装了 Docker 和 Docker Compose，即可快速运行本项目。
 
-1.**克隆项目**
+1.**准备工作**
 
-git clone https://github.com/ari-0210/job-tracker-fullstack.git
-cd job-tracker-fullstack
+克隆项目： git clone https://github.com/ari-0210/job-tracker-fullstack.git
+进入目录： cd job-tracker-fullstack
 
 2.**配置环境变量**
 
