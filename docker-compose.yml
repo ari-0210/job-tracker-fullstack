@@ -1,0 +1,50 @@
+# docker-compose.yml
+
+version: "3.8"
+
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      # 'volumes' 在 db 服务下，缩进4个空格
+      # 下面这一行是列表项，所以有连字符 '-'
+      - mysql-data:/var/lib/mysql
+
+  # 后端服务
+  backend:
+    build: ./backend
+    image: jobtracker-backend  
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET_KEY}
+    depends_on:
+      - db
+
+  # 前端服务
+  frontend: # <-- 'frontend' 缩进2个空格，与 'db' 同级
+    build: ./frontend
+    image: jobtracker-frontend
+    restart: always
+    ports:
+      - "8888:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+
+volumes: # <-- 这一行没有任何缩进，与顶部的 'version' 和 'services' 左对齐
+  mysql-data:
+    # 可以把这行留空，或者为它添加驱动等配置，例如：
+    # driver: local
