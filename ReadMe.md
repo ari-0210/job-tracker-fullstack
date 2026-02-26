@@ -45,7 +45,6 @@ This is a full-stack web application for tracking and managing personal job appl
 ## 技术栈
 
 - **前端**:
-
   - Vue 3 (Composition API, `<script setup>`)
   - Vue Router
   - Naive UI (UI 组件库)
@@ -53,142 +52,45 @@ This is a full-stack web application for tracking and managing personal job appl
   - 构建工具: Vue CLI / Webpack
 
 - **后端**:
-
   - Java (JDK 17+)
   - Spring Boot
   - Spring Security (JWT 认证)
   - Spring Data JPA (Hibernate)
   - 数据库: MySQL
 
+- **容器化**:
+  Docker & Docker Compose (实现环境一致性与一键部署)
 - **部署**:
   - Nginx (作为静态文件服务器和 API 网关/反向代理)
 
-## 快速开始
+## 快速开始 (Docker 一键部署)
 
-### 环境准备
+只要你的机器安装了 Docker 和 Docker Compose，即可快速运行本项目。
 
-在运行此项目之前，请确保你的系统上已安装以下软件：
+1.**克隆项目**
 
-- Node.js (v16 或更高版本) 和 npm/yarn
-- JDK (Java Development Kit, v17 或更高版本)
-- Maven 或 Gradle
-- MySQL Server
-- Nginx
-- Postman (推荐，用于 API 测试)
+git clone https://github.com/ari-0210/job-tracker-fullstack.git
+cd job-tracker-fullstack
 
-### 后端设置
+2.**配置环境变量**
 
-1.  **克隆项目**：
+复制 .env.example 并更名为 .env，根据需要修改数据库密码和 JWT 密钥。
 
-    ```bash
-    git clone ‘https://github.com/ari-0210/job-tracker-fullstack.git'
-    ```
+3.**启动应用**
 
-2.  **数据库配置**：
+docker-compose up -d --build
 
-    - 在 MySQL 中创建一个数据库。
-    - 修改 `src/main/resources/application.properties` 文件，更新数据库连接信息：
+4.**访问应用**
 
-      ```properties
-      spring.datasource.url=jdbc:mysql://localhost:3306/你的数据库名
-      spring.datasource.username=你的数据库用户名
-      spring.datasource.password=你的数据库密码
+前端界面: http://localhost:8888
+后端 API: http://localhost:8080
 
-      # 推荐的 JPA/Hibernate 配置
-      spring.jpa.hibernate.ddl-auto=update # 开发时使用 update，生产环境建议使用 validate 或 none
-      spring.jpa.show-sql=true
-      logging.level.org.hibernate.SQL=DEBUG
-      logging.level.org.hibernate.type.descriptor.sql=TRACE
-      ```
+### Nginx 部署架构说明
 
-3.  **JWT 配置**：
+本项目采用 Nginx 反向代理方案。在 Docker 环境下，Nginx 容器会自动处理：
 
-    - 在 `application.properties` 中设置 JWT 密钥和过期时间：
-      ```properties
-      jwt.secret=这是一个必须超过32字节的足够长且安全的密钥字符串请务必修改
-      jwt.expiration.ms=86400000 # 24小时 (单位：毫秒)
-      ```
+**前端路由**: 自动映射 / 到静态资源，并支持 SPA 路由回退 (try_files)。
 
-4.  **启动后端**：
-    - 在你的 IDE (如 IntelliJ IDEA) 中直接运行主应用类。
-    - 或者使用 Maven/Gradle 在项目根目录下运行：`./mvnw spring-boot:run` 或 `./gradlew bootRun`。
-    - 后端服务默认应运行在 `http://localhost:8080` (或其他你配置的端口)。
+**API 转发**: 自动将所有 /api/ 开头的请求转发至后端容器 backend:8080。
 
-### 前端设置
-
-1.  **安装依赖**：
-
-    - 进入前端项目目录 (例如 `cd your-frontend-folder`)。
-    - 运行 `npm install` 或 `yarn install`。
-
-2.  **开发模式运行 (用于开发)**：
-
-    - 为了让开发服务器的 API 请求能正确访问后端，需要在 `vue.config.js` 中配置 `devServer.proxy`。
-      ```javascript
-      // vue.config.js
-      module.exports = {
-        devServer: {
-          proxy: {
-            "/api": {
-              target: "http://localhost:8080", // 指向你的后端服务地址
-              changeOrigin: true,
-            },
-          },
-        },
-      };
-      ```
-    - 配置好代理后，运行 `npm run serve`。
-    - 前端开发服务器将运行在（例如）`http://localhost:5173`。
-
-3.  **构建生产版本 (用于部署)**：
-    - 运行 `npm run build`。
-    - 这会在项目下生成一个 `dist` 文件夹，里面是所有用于部署的静态文件。
-
-### Nginx 部署
-
-1.  **复制文件**：将前端 `dist` 目录下的所有文件复制到你的 Nginx 服务器的某个目录（例如 `/var/www/job-tracker`）。
-
-2.  **配置 Nginx**：
-
-    - 在 Nginx 的配置目录（例如 `/usr/local/etc/nginx/servers/` 或 `/etc/nginx/sites-available/`）下创建一个新的配置文件，例如 `job-tracker.conf`。
-    - 填入以下配置内容（请根据你的实际路径和端口修改）：
-
-      ```nginx
-      server {
-          listen       8888; # 前端访问的端口
-          server_name  localhost;
-
-          # 前端静态文件的根目录
-          root /path/to/your/dist/folder; # 修改为你的 dist 文件夹的绝对路径
-          index  index.html;
-
-          # 处理前端 SPA 路由
-          location / {
-              try_files $uri $uri/ /index.html;
-          }
-
-          # 将所有 /api 请求反向代理到后端 Spring Boot 服务
-          location /api/ {
-              proxy_pass http://localhost:8080; # 修改为你的后端服务地址和端口
-              proxy_set_header Host $host;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
-          }
-
-          error_page   500 502 503 504  /50x.html;
-          location = /50x.html {
-              root   html;
-          }
-      }
-      ```
-
-3.  **重载 Nginx**：
-    - 检查配置是否有语法错误：`sudo nginx -t`
-    - 使配置生效：`sudo nginx -s reload`
-
-## 使用说明
-
-1.  **创建用户**：访问 Nginx 服务的地址（例如 `http://localhost:8888`），点击注册，输入用户名和密码进行创建用户。
-2.  **登录**：访问 Nginx 服务的地址。如果未登录，应用会自动跳转到登录页面。输入用户名和密码进行登录。
-3.  **主界面**：登录成功后，即可看到工作列表。可以进行创建、更新、删除、批量删除、分页和搜索等操作。
+**无需手动配置:** 相关的 nginx.conf 已集成在 docker 文件夹中，启动即生效。
