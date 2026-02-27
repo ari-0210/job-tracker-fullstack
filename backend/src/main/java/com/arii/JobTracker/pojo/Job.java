@@ -11,16 +11,24 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "job")
+@Table(name = "submissions")
 @Entity
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    //Learning:---新增---
+    @Column(name ="user_id",nullable = false)
+    private  Integer userId;
+
+    @Column(name = "reminder_date")
+    private LocalDateTime reminderDate;
+    //---
     private String company;
+    private Integer status;
     private String position;
     private String applyDate;
-    private Integer status;
+
     private String tags;
     @Column(name = "update_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
