@@ -19,7 +19,7 @@ public class UserService {
 
     @Transactional
     public User createUser(UserCreateRequestDto userDto) {
-        //  检查用户名是否已存在
+        //  learning:检查用户名是否已存在
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw new RuntimeException("Error: Username is already taken!");
         }
@@ -39,5 +39,11 @@ public class UserService {
 
         //  保存到数据库
         return userRepository.save(newUser);
+    }
+
+    //learning:Users实体
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Error: User not found."));
     }
 }

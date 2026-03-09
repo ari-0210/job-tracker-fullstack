@@ -19,8 +19,8 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // 存储哈希后的密码
+    private String password; // learning:存储哈希后的密码
 
-    private String roles; //  USER,ADMIN
-    private boolean enabled = true; // 用户是否启用
+    private String roles = UserRole.USER.name();
+    private boolean enabled = true; // learning:用户是否启用
 }

@@ -28,18 +28,19 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter; //  JWT 请求过滤器
 
-    //  定义 PasswordEncoder Bean
+    // learning: 定义 PasswordEncoder Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 用 AuthenticationManager Bean，AuthController 进行用户凭证的显式认证
+    // learning:用 AuthenticationManager Bean，AuthController 进行用户凭证的显式认证
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-    //  定义 SecurityFilterChain Bean 配置安全规则
+
+    // learning: 定义 SecurityFilterChain Bean 配置安全规则
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -64,7 +65,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
 
-                // 自定义 JWT 请求过滤器添加到过滤器链中
+                // learning:自定义 JWT 请求过滤器添加到过滤器链中
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

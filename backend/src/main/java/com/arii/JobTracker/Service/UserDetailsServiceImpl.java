@@ -20,8 +20,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // 将 User 实体转换为 Spring Security 的 UserDetails 对象
-        // AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRoles()) 用于将逗号分隔的角色字符串转换为权限列表
+        // learning:将 User 实体转换为 Spring Security 的 UserDetails 对象
+        //  learning:AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRoles())
+        //  learning:用于将逗号分隔的角色字符串转换为权限列表
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

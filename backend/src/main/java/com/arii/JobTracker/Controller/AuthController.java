@@ -6,6 +6,8 @@ import com.arii.JobTracker.DTO.UserCreateRequestDto;
 import com.arii.JobTracker.Security.JwtUtil;
 import com.arii.JobTracker.Service.UserService;
 import com.arii.JobTracker.pojo.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-    @RestController
+@Tag(name = "00.认证管理", description = "用户注册、登录及令牌发放")
+@RestController
     @RequestMapping("/api/auth")
     public class AuthController {
 
         @Autowired
-        private AuthenticationManager authenticationManager; // 用于实际的认证处理
+        private AuthenticationManager authenticationManager; // learning:用于实际的认证处理
 
         @Autowired
         private JwtUtil jwtUtil;
@@ -34,25 +37,27 @@ import org.springframework.web.bind.annotation.RestController;
         private UserDetailsService userDetailsService;
 
         @Autowired
-        private UserService userService; // 注入新的 UserService
+        private UserService userService; // learning:注入新的 UserService
 
+    @Operation(summary = "用户注册", description = "创建新账号并持久化到数据库")
         @PostMapping("/register")
         public ResponseEntity<?> registerUser(@RequestBody UserCreateRequestDto userCreateRequest) {
             try {
                 User registeredUser = userService.createUser(userCreateRequest);
-                // 注册成功，可以返回成功信息，新创建的用户信息
+                // learning:注册成功，可以返回成功信息，新创建的用户信息
                 return ResponseEntity.ok("User registered successfully! Username: " + registeredUser.getUsername());
             } catch (RuntimeException e) {
-                // 例如用户名已存在的错误
+                // learning:例如用户名已存在的错误
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
 
+    @Operation(summary = "用户登录", description = "验证账号密码并返回 JWT 访问令牌")
         @PostMapping("/login")
         public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
             Authentication authentication;
             try {
-                // 使用 AuthenticationManager 进行用户认证（ UserDetailsServiceImpl 和 PasswordEncoder）
+                // learning:使用 AuthenticationManager 进行用户认证（ UserDetailsServiceImpl 和 PasswordEncoder）
                 authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
                 );
@@ -61,7 +66,7 @@ import org.springframework.web.bind.annotation.RestController;
                 return ResponseEntity.status(401).body("Incorrect username or password");
             }
 
-            // 加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
+        // learning:加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             // 生成 JWT

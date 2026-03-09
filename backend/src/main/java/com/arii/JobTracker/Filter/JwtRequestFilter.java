@@ -49,11 +49,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
              logger.warn("JWT Token does not begin with Bearer String or is missing");
         }
 
-        //  如成功提取到用户名，并且当前 SecurityContext 中还没有认证信息
+        //  learning:如成功提取到用户名，并且当前 SecurityContext 中还没有认证信息
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            //验证 JWT 是否有效 (签名、未过期，并且用户名与 UserDetails 中的匹配)
+            //learning:验证 JWT 是否有效 (签名、未过期，并且用户名与 UserDetails 中的匹配)
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
                 //如果 JWT 有效，手动创建一个 Spring Security 的 Authentication 对象
