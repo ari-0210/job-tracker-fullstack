@@ -4,34 +4,36 @@
   <n-modal v-model:show="showModal">
     <n-card
       style="width: 600px"
-      title="Create New Job"
+      title="Create New Submissions/创建新事项"
       :bordered="false"
       size="huge"
       role="dialog"
       aria-modal="true"
     >
       <n-form>
-        <n-form-item label="Company">
+        <n-form-item label="Recipient">
           <n-input
             v-model:value="newJobData.company"
-            placeholder="Input Company"
+            placeholder="输入事项接收方"
           />
         </n-form-item>
-        <n-form-item label="Position">
+        <n-form-item label="Title">
           <n-input
-            v-model:value="newJobData.position"
-            placeholder="Input Position"
+            v-model:value="newJobData.title"
+            placeholder="输入事项标题"
           />
         </n-form-item>
-        <n-form-item label="ApplyDate">
+        <n-form-item label="ReminderDate">
           <n-date-picker
-            v-model:formatted-value="newJobData.applyDate"
-            type="date"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
+            v-model:formatted-value="newJobData.reminderDate"
+            type="datetime"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="'09:00:00'"
             style="width: 100%"
           />
         </n-form-item>
+
         <n-form-item label="Status">
           <n-radio-group
             v-model:value="newJobData.status"
@@ -43,14 +45,15 @@
                 :key="option.value"
                 :value="option.value"
                 :label="option.label"
-              />
+                >{{ option.label }}
+              </n-radio>
             </n-space>
           </n-radio-group>
         </n-form-item>
         <n-form-item label="Tags">
           <n-input
             v-model:value="newJobData.tags"
-            placeholder="Input tags (comma separated)"
+            placeholder="输入标签 (空格分离)"
           />
         </n-form-item>
       </n-form>
@@ -71,19 +74,18 @@ const showModal = ref(false);
 
 const getDefaultNewJob = () => ({
   company: "",
-  position: "",
-  apply_date: null,
-  status: "5",
+  title: "",
+  reminderDate: null,
+  status: "DRAFT",
   tags: "",
 });
 const newJobData = ref(getDefaultNewJob());
 
 const statusOptions = ref([
-  { value: "1", label: "Applied" },
-  { value: "2", label: "Interviewing" },
-  { value: "3", label: "Offered" },
-  { value: "4", label: "Rejected" },
-  { value: "5", label: "Pending" },
+  { value: "DRAFT", label: "草稿" },
+  { value: "APPLIED", label: "已投递" },
+  { value: "INTERVIEWING", label: "面试中" },
+  { value: "COMPLETED", label: "已完成" },
 ]);
 
 const emit = defineEmits(["job-created"]);
@@ -93,8 +95,8 @@ const openCreateModal = () => {
   showModal.value = true;
 };
 const handleCreateJob = async () => {
-  if (!newJobData.value.company || !newJobData.value.position) {
-    alert("Company and Position are required!");
+  if (!newJobData.value.company || !newJobData.value.title) {
+    alert("Company and Title are required!");
     return;
   }
 
@@ -108,7 +110,7 @@ const handleCreateJob = async () => {
   } catch (error) {
     console.error("Failed to create job:", error);
     if (error.response) {
-      // 打印后端返回的具体错误数据
+      // learning:打印后端返回的具体错误数据
       console.error("Backend response data:", error.response);
       alert("Error creating job: " + JSON.stringify(error.response));
     } else if (error.request) {
