@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="isAuthenticated">
+  <nav v-if="authStore.isAuthenticated">
     <router-link to="/">DDL Tracker</router-link> |
     <router-link to="/about">About</router-link>
     <a href="#" @click.prevent="logout" style="margin-left: 15px">Logout</a>
@@ -9,13 +9,14 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { isAuthenticated, clearToken } from "@/api/auth.js";
+import { useAuthStore } from "./stores/auth";
 
+const authStore = useAuthStore();
 const router = useRouter();
 
-// learning:登出逻辑
+// learn;登出逻辑
 const logout = () => {
-  clearToken(); // learning:清除 token 和状态
-  router.push({ name: "Login" }); // learning:重定向到登录页
+  authStore.logout();
+  router.push({ name: "Login" });
 };
 </script>

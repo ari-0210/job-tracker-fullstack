@@ -95,7 +95,9 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { loginUser, setToken, registerUser } from "@/api/auth";
+import { loginUser, registerUser } from "@/api/auth";
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
 
 const username = ref("");
 const password = ref("");
@@ -111,7 +113,7 @@ const newUser = ref({
   username: "",
   password: "",
   confirmPassword: "",
-  roles: "ROLE_USER", // 默认给新用户 "ROLE_USER"
+  roles: "USER", // learn;默认给新用户 "ROLE_USER"
 });
 
 const handleRegister = async () => {
@@ -135,7 +137,7 @@ const handleRegister = async () => {
     };
     await registerUser(payload);
 
-    // 注册成功
+    // learn;注册成功
     alert("Registration successful! You can now log in.");
     showRegisterModal.value = false;
   } catch (error) {
@@ -157,12 +159,13 @@ const handleRegister = async () => {
 
 const handleLogin = async () => {
   if (!username.value || !password.value) {
-    errorMessage.value = "Username and password are required.";
+    errorMessage.value =
+      "Username and password are required(需要用户名和密码).";
     return;
   }
 
   isLoading.value = true;
-  errorMessage.value = ""; // 清除之前的错误信息
+  errorMessage.value = ""; // learn;清除之前的错误信息
 
   try {
     const response = await loginUser({
@@ -174,12 +177,12 @@ const handleLogin = async () => {
 
     if (token) {
       console.log(
-        "Login successful, token received. Setting token and attempting redirect..."
+        "Login successful, token received. Setting token and attempting redirect...",
       );
-      //  存储 JWT
-      setToken(token);
+      //  learn;使用 pinia 处理存储和 Header
+      authStore.login(token);
 
-      // 跳转到受保护的页面
+      // learn;跳转到受保护的页面
       router.push({ name: "home" });
     } else {
       errorMessage.value = "Login successful, but no token received.";
@@ -187,7 +190,7 @@ const handleLogin = async () => {
   } catch (error) {
     console.error("Login failed:", error);
     if (error.response && error.response.data) {
-      // 假设后端错误响应体是 { message: "错误信息" } 或直接是字符串
+      // learn;假设后端错误响应体是 { message: "错误信息" } 或直接是字符串
       errorMessage.value =
         typeof error.response.data === "string"
           ? error.response.data
@@ -205,13 +208,13 @@ const handleLogin = async () => {
 };
 
 const openRegisterModal = () => {
-  // 重置表单
+  // learn;重置表单
   registerError.value = "";
   newUser.value = {
     username: "",
     password: "",
     confirmPassword: "",
-    roles: "ROLE_USER",
+    roles: "USER",
   };
   showRegisterModal.value = true;
 };

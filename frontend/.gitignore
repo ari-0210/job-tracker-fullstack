@@ -24,6 +24,7 @@ npm-debug.log*
 yarn-error.log*
 .env.local
 .env.*.local
+clean.js
 
 # Java/Maven/Gradle
 /target
