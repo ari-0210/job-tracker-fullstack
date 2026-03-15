@@ -1,4 +1,4 @@
-import apiClient from "@/api/axiosInstance";
+import apiClient from "./client";
 
 export const registerUser = (credentials) => {
   return apiClient.post("/auth/register", credentials);

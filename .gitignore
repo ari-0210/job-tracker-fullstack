@@ -69,7 +69,7 @@ HELP.md
 
 # Local config files
 /frontend/*.local
-
+/frontend/clean.js
 # ===================================================================
 # Sensitive Configuration & Docker (IMPORTANT!)
 # ===================================================================

@@ -1,18 +1,24 @@
-import apiClient from './axiosInstance';
+import apiClient from "./client";
 
 export const getJobs = (queryParams) => {
-  console.log("DEBUG: 'getJobs' function in api/job.js is being called with params:", queryParams);
-// 创建请求配置对象
-  const requestConfig = { 
-    url: '/jobs', // 目标路径
-    params: queryParams // 查询参数
+  console.log(
+    "DEBUG: 'getJobs' function in api/job.js is being called with params:",
+    queryParams,
+  );
+  // 创建请求配置对象
+  const requestConfig = {
+    url: "/jobs", // 目标路径
+    params: queryParams, // 查询参数
   };
-  
+
   // 使用 Axios 的辅助方法打印出将要请求的完整 URL
   // getUri() 会将 baseURL 和请求的 url、params 组合起来
   try {
-    console.log("DEBUG: Axios is about to request a URL computed as:", apiClient.getUri(requestConfig));
-  } catch(e) {
+    console.log(
+      "DEBUG: Axios is about to request a URL computed as:",
+      apiClient.getUri(requestConfig),
+    );
+  } catch (e) {
     console.error("DEBUG: Error trying to get URI from Axios config", e);
   }
 
@@ -20,9 +26,8 @@ export const getJobs = (queryParams) => {
   return apiClient.get(requestConfig.url, { params: requestConfig.params });
 };
 
-
 export const createJob = (jobData) => {
-  return apiClient.post('/jobs', jobData);
+  return apiClient.post("/jobs", jobData);
 };
 
 export const updateJob = (id, jobData) => {
@@ -34,5 +39,5 @@ export const deleteJob = (id) => {
 };
 
 export const deleteMultipleJobs = (ids) => {
-  return apiClient.post('/jobs/batch-delete', { ids: ids });
+  return apiClient.post("/jobs/batch-delete", { ids: ids });
 };
