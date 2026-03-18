@@ -1,21 +1,6 @@
 <template>
   <div>
-    <n-space style="margin-bottom: 20px; display: flex">
-      <n-input
-        v-model:value="jobStore.queryParams.keyword"
-        placeholder="Please input keywords for searching(请输入查找关键字)"
-        clearable
-        style="flex-grow: 1; max-width: 800px"
-        @keyup.enter="jobStore.handleSearch"
-      />
-      <n-button
-        type="primary"
-        @click="jobStore.handleSearch"
-        :loading="jobStore.loading"
-      >
-        Search
-      </n-button>
-    </n-space>
+    <JobSearch />
     <n-space style="margin-bottom: 10px" v-if="selectedJobIds.size > 0">
       <n-button
         type="error"
@@ -81,17 +66,7 @@
       </tbody>
     </n-table>
 
-    <n-pagination
-      v-if="!jobStore.loading && !fetchError && jobStore.total > 0"
-      v-model:page="jobStore.queryParams.page"
-      v-model:page-size="jobStore.queryParams.size"
-      :item-count="jobStore.total"
-      show-size-picker
-      :page-sizes="[10, 20, 30, 40]"
-      show-quick-jumper
-      :disabled="jobStore.loading"
-      style="margin-top: 20px; display: flex; justify-content: flex-end"
-    />
+    <JobPagination />
   </div>
 
   <JobForm
@@ -107,6 +82,8 @@ import { onMounted, watch, ref, computed } from "vue";
 import { useJobStore } from "@/stores/job";
 import JobForm from "@/components/JobForm.vue";
 import { getStatusLabel } from "@/constants/job";
+import JobSearch from "./JobSearch.vue";
+import JobPagination from "./JobPagination.vue";
 
 const jobStore = useJobStore();
 

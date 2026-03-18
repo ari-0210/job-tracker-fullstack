@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { Job, JobQueryParams } from "@/types/job";
 import { jobApi } from "@/api/job";
+const fetchError = ref<any>(null); //learn;定义错误状态
 
 export const useJobStore = defineStore("job", () => {
   // learn;--- 1. 列表状态 ---
@@ -19,6 +20,7 @@ export const useJobStore = defineStore("job", () => {
   // learn;获取列表
   const fetchJobs = async () => {
     loading.value = true;
+    fetchError.value = null;
     try {
       const params = {
         ...queryParams.value,
@@ -30,6 +32,9 @@ export const useJobStore = defineStore("job", () => {
       // learn;对齐后端 Spring Page 结构
       jobs.value = res.data.content;
       total.value = res.data.totalElements;
+    } catch (err) {
+      fetchError.value = err; //
+      console.error("Fetch jobs failed:", err);
     } finally {
       loading.value = false;
     }
@@ -97,6 +102,7 @@ export const useJobStore = defineStore("job", () => {
     isFormShow,
     formMode,
     currentJob,
+    fetchError,
     // 导出方法
     fetchJobs,
     bulkDelete,
