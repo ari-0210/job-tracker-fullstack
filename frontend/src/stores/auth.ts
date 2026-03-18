@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import apiClient from "@/api/client";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("token") || "");
@@ -8,7 +7,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuthenticated = computed(() => !!token.value);
 
-  function login(newToken) {
+  function login(newToken: any) {
     token.value = newToken;
     localStorage.setItem("token", newToken);
   }

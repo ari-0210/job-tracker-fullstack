@@ -48,7 +48,7 @@ public class JobController {
     @GetMapping
     public ResponseEntity<Page<Job>> getAllJobs(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam(name = "search", required = false) String searchTerm,
+            @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
 
@@ -58,7 +58,7 @@ public class JobController {
 
         //  learning: 通过 UserService 找到对应的数据库 ID
         Integer currentUserId = userService.findByUsername(username).getId();
-        Page<Job> jobsPage = jobService.findAllJobs(currentUserId, page, size, searchTerm);
+        Page<Job> jobsPage = jobService.findAllJobs(currentUserId, page, size, keyword);
         return ResponseEntity.ok(jobsPage);
     }
 

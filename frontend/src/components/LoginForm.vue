@@ -6,14 +6,17 @@
     >
       <n-form @submit.prevent="handleLogin">
         <n-form-item-row label="Username">
-          <n-input v-model:value="username" placeholder="Enter your username" />
+          <n-input
+            v-model:value="username"
+            placeholder="Enter your username(请输入用户名)"
+          />
         </n-form-item-row>
         <n-form-item-row label="Password">
           <n-input
             v-model:value="password"
             type="password"
             show-password-on="mousedown"
-            placeholder="Enter your password"
+            placeholder="Enter your password(请输入密码)"
             @keyup.enter="handleLogin"
           />
         </n-form-item-row>
@@ -113,7 +116,7 @@ const newUser = ref({
   username: "",
   password: "",
   confirmPassword: "",
-  roles: "USER", // learn;默认给新用户 "ROLE_USER"
+  roles: "USER",
 });
 
 const handleRegister = async () => {

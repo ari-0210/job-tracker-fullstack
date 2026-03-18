@@ -5,8 +5,7 @@ import axios, {
   type AxiosError,
   type InternalAxiosRequestConfig,
 } from "axios";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import router from "@/router";
 
 const apiClient: AxiosInstance = axios.create({
   baseURL: "/api",

@@ -7,15 +7,8 @@ export function useJobForm(initialData = {}) {
     reminderDate: null,
     status: "DRAFT",
     tags: "",
-    ...initialData, // learning:如果是修改，会覆盖默认值
+    ...initialData, // learn;如果是修改，会覆盖默认值
   });
-
-  const statusOptions = [
-    { value: "DRAFT", label: "草稿" },
-    { value: "APPLIED", label: "已投递" },
-    { value: "INTERVIEWING", label: "面试中" },
-    { value: "COMPLETED", label: "已完成" },
-  ];
 
   const resetForm = () => {
     formModel.value = {
@@ -27,5 +20,5 @@ export function useJobForm(initialData = {}) {
     };
   };
 
-  return { formModel, statusOptions, resetForm };
+  return { formModel, resetForm };
 }
