@@ -13,8 +13,22 @@ export const STATUS_OPTIONS: StatusOption[] = [
   { value: "REJECTED", label: "被拒绝" },
 ];
 
-// learn;导出函数
 export const getStatusLabel = (statusValue: string) => {
   const option = STATUS_OPTIONS.find((opt) => opt.value === statusValue);
   return option ? option.label : statusValue || "未定义状态";
+};
+
+export const STATUS_TYPE_MAP: Record<
+  string,
+  "default" | "info" | "warning" | "success" | "error"
+> = {
+  DRAFT: "default", // 灰色
+  APPLIED: "info", // 蓝色
+  INTERVIEWING: "warning", // 橙色
+  COMPLETED: "success", // 绿色
+  REJECTED: "error", // 红色
+};
+
+export const getStatusType = (status: string) => {
+  return STATUS_TYPE_MAP[status] || "default";
 };

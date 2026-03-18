@@ -1,6 +1,5 @@
 <template>
   <div>
-    <JobSearch />
     <n-space style="margin-bottom: 10px" v-if="selectedJobIds.size > 0">
       <n-button
         type="error"
@@ -52,7 +51,11 @@
           <td>{{ job.company }}</td>
           <td>{{ job.title }}</td>
           <td>{{ job.applyDate }}</td>
-          <td>{{ getStatusLabel(job.status) }}</td>
+          <td>
+            <n-tag :type="getStatusType(job.status)" round>{{
+              getStatusLabel(job.status)
+            }}</n-tag>
+          </td>
           <td>{{ job.tags }}</td>
           <td>{{ job.reminderDate }}</td>
           <td>{{ job.updateDate }}</td>
@@ -68,21 +71,13 @@
 
     <JobPagination />
   </div>
-
-  <JobForm
-    v-model:show="jobStore.isFormShow"
-    :mode="jobStore.formMode"
-    :initialData="jobStore.currentJob"
-    @save="jobStore.saveJob"
-  />
 </template>
 
 <script setup lang="ts">
 import { onMounted, watch, ref, computed } from "vue";
 import { useJobStore } from "@/stores/job";
 import JobForm from "@/components/JobForm.vue";
-import { getStatusLabel } from "@/constants/job";
-import JobSearch from "./JobSearch.vue";
+import { getStatusLabel, getStatusType } from "@/constants/job";
 import JobPagination from "./JobPagination.vue";
 
 const jobStore = useJobStore();
