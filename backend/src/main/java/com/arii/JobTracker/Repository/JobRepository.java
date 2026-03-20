@@ -25,7 +25,13 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 
     Page<Job> findByUserId(Integer userId, Pageable pageable);
 
-    // 自定义删除：只有 id 在列表中 且 user_id 等于当前用户的才会被删
+    @Query("SELECT j.status, COUNT(j) FROM Job j WHERE j.userId = :userId GROUP BY j.status")
+    List<Object[]> countJobsByStatus(@Param("userId") Integer userId);
+
+    // learn;统计某个用户的所有记录总数
+    long countByUserId(Integer userId);
+
+    // learn;自定义删除 只有 id 在列表中 且 user_id 等于当前用户的才会被删
     @Modifying
     @Transactional
     @Query("DELETE FROM Job j WHERE j.id IN :ids AND j.userId = :userId")

@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, computed } from "vue";
 import { useJobStore } from "@/stores/job";
-import JobForm from "@/components/JobForm.vue";
+
 import { getStatusLabel, getStatusType } from "@/constants/job";
 import JobPagination from "./JobPagination.vue";
 

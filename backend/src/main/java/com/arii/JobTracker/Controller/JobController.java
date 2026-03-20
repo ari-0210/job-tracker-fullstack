@@ -17,7 +17,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin(origins = "http://localhost:5173")
+
 @Slf4j //learning:自动生成log
 @Tag(name = "01.申请事项管理", description = "处理申请事项的增删改查及统计")
 @RestController

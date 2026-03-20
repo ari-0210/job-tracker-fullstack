@@ -64,9 +64,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import { STATUS_OPTIONS } from "@/constants/job";
 import type { Job } from "@/types/job";
+import { useJobForm } from "@/composables/useJobForm";
+const { formModel, resetForm } = useJobForm();
 
 const props = defineProps<{
   show: boolean;
@@ -80,14 +82,6 @@ const emit = defineEmits<{
   (e: "save", data: Job): void;
 }>();
 
-const formModel = ref<Job>({
-  company: "",
-  title: "",
-  reminderDate: null,
-  status: "DRAFT",
-  tags: "",
-});
-
 // learn：当弹窗打开时，根据 initialData 初始化表单
 watch(
   () => props.show,
@@ -96,13 +90,7 @@ watch(
       if (props.mode === "edit" && props.initialData) {
         formModel.value = { ...props.initialData }; // 编辑模式：克隆
       } else {
-        formModel.value = {
-          company: "",
-          title: "",
-          reminderDate: null,
-          status: "DRAFT",
-          tags: "",
-        };
+        resetForm();
       }
     }
   },

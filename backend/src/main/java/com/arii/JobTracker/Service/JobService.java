@@ -1,5 +1,6 @@
 package com.arii.JobTracker.Service;
 
+import com.arii.JobTracker.DTO.StatisticsDTO;
 import com.arii.JobTracker.Repository.JobRepository;
 import com.arii.JobTracker.pojo.Job;
 import jakarta.transaction.Transactional;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobService {
@@ -67,6 +70,19 @@ public class JobService {
         if (ids != null && !ids.isEmpty()) {
             jobRepository.deleteByIdsAndUserId(userId, ids);
         }
+    }
+
+    public StatisticsDTO getAppStatistics(Integer userId) {
+        long total = jobRepository.countByUserId(userId);
+        List<Object[]> results = jobRepository.countJobsByStatus(userId);
+
+        Map<String, Long> statusMap = new HashMap<>();
+        for (Object[] result : results) {
+            // learn;result[0] 是 status (String/Enum), result[1] 是 count (Long)
+            statusMap.put(result[0].toString(), (Long) result[1]);
+        }
+
+        return new StatisticsDTO(total, statusMap);
     }
 
 
