@@ -1,0 +1,62 @@
+<template>
+  <n-space vertical size="large" class="p-6">
+    <n-grid :cols="4" :x-gap="12">
+      <n-gi>
+        <n-card>
+          <n-statistic label="总申请数" :value="statsStore.summary.totalCount">
+            <template #prefix>📊</template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+    </n-grid>
+
+    <n-card title="申请状态分布">
+      <div style="height: 400px; width: 100%">
+        <p v-if="statsStore.loading">加载中...</p>
+        <div id="chart-container" v-else style="width: 100%; height: 100%">
+          <v-chart
+            v-if="statsStore.summary.totalCount > 0"
+            :option="chartOption"
+            autoresize
+          /><n-empty v-else description="提交一些事项后再来看看吧" />
+        </div>
+      </div>
+    </n-card>
+  </n-space>
+</template>
+
+<script setup lang="ts">
+import { useStatsStore } from "@/stores/stats";
+import { onMounted, computed } from "vue";
+import { getStatusLabel } from "@/constants/job";
+const statsStore = useStatsStore();
+
+const chartOption = computed(() => {
+  // learn; 先准备好数据数组
+  const dataArray = Object.entries(statsStore.summary.statusCounts).map(
+    ([key, count]) => {
+      return { value: count, name: getStatusLabel(key) };
+    },
+  );
+
+  // learn; ECharts 配置
+  return {
+    tooltip: { trigger: "item", formatter: "{b}: {c} ({d}%)" },
+    legend: { bottom: "5%", left: "center" },
+    color: ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de"],
+    series: [
+      {
+        name: "申请状态",
+        type: "pie",
+        radius: ["40%", "70%"],
+        avoidLabelOverlap: false,
+        itemStyle: { borderRadius: 10, borderColor: "#fff", borderWidth: 2 },
+        data: dataArray,
+      },
+    ],
+  };
+});
+onMounted(() => {
+  statsStore.fetchSummary();
+});
+</script>

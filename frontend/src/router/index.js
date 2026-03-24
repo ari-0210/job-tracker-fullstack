@@ -11,6 +11,15 @@ const routes = [
     meta: { requiresAuth: true }, // learn;需要认证
   },
   {
+    path: "/dashboard",
+    name: "dashboard",
+    component: () => import("@/views/Dashboard.vue"),
+    meta: {
+      requiresAuth: true,
+      title: "仪表盘",
+    },
+  },
+  {
     path: "/login",
     name: "Login",
     component: LoginForm,

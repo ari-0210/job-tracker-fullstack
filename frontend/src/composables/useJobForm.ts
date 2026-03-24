@@ -1,7 +1,8 @@
 import { ref } from "vue";
+import type { Job } from "@/types/job";
 
 export function useJobForm(initialData = {}) {
-  const formModel = ref({
+  const formModel = ref<Job>({
     company: "",
     title: "",
     reminderDate: null,
