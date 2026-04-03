@@ -3,8 +3,34 @@
     <n-grid :cols="4" :x-gap="12">
       <n-gi>
         <n-card>
-          <n-statistic label="总申请数" :value="statsStore.summary.totalCount">
+          <n-statistic label="总事项数" :value="statsStore.summary.totalCount">
             <template #prefix>📊</template>
+          </n-statistic>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card class="bg-red-50/50 border-red-100">
+          <n-statistic
+            label="7天内截止"
+            :value="statsStore.summary.next7DaysCount"
+          >
+            <template #prefix>🚨</template>
+            <template #suffix
+              ><span class="text-xs text-gray-400">项</span></template
+            >
+          </n-statistic>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card class="bg-red-50/50 border-red-100">
+          <n-statistic
+            label="本月内截止"
+            :value="statsStore.summary.thisMonthCount"
+          >
+            <template #prefix>❕</template>
+            <template #suffix
+              ><span class="text-xs text-gray-400">项</span></template
+            >
           </n-statistic>
         </n-card>
       </n-gi>

@@ -24,8 +24,8 @@
           </th>
           <th>Recipient</th>
           <th>Title</th>
-          <th>CreateDate</th>
-          <th>status</th>
+          <th>Deadline</th>
+          <th>Status</th>
           <th>Tags</th>
           <th>ReminderDate</th>
           <th>UpdateDate</th>
@@ -50,7 +50,7 @@
           </td>
           <td>{{ job.company }}</td>
           <td>{{ job.title }}</td>
-          <td>{{ job.applyDate }}</td>
+          <td>{{ job.deadline }}</td>
           <td>
             <n-tag :type="getStatusType(job.status)" round>{{
               getStatusLabel(job.status)

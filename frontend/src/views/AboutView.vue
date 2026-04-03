@@ -1,7 +1,7 @@
 <template>
-  <div class="about">
-    <h1>About JobTracker</h1>
-    <p>
+  <div class="flex-col items-center justify-center p-4">
+    <h1>About DDL Tracker</h1>
+    <p class="relative border-1 max-w-4xl">
       This project is a resume delivery tracking system to help users record and
       manage jobs, companies, delivery status in the job search process, to
       facilitate real-time control of the progress of job search.

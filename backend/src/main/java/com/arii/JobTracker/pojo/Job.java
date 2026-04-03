@@ -45,13 +45,18 @@ public class Job {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate applyDate;
 
-
     // Learning:修改时间：每次更新都会自动刷新
     @LastModifiedDate
     @Column(name = "update_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDate;
 
+    //learning:ddl
+    @Column(name = "deadline", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime deadline;
+
+    //learning:ddl->提醒时间
     @Column(name = "reminder_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reminderDate;

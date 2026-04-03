@@ -7,6 +7,8 @@ export const useStatsStore = defineStore("stats", () => {
   const summary = ref<StatsSummary>({
     totalCount: 0,
     statusCounts: {},
+    next7DaysCount: 0,
+    thisMonthCount: 0,
   });
   const loading = ref(false);
 

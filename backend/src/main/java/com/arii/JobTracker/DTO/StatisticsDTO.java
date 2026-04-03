@@ -10,4 +10,6 @@ import java.util.Map;
 public class StatisticsDTO {
     private long totalCount;
     private Map<String, Long> statusCounts;
+    private long next7DaysCount;
+    private long thisMonthCount;
 }

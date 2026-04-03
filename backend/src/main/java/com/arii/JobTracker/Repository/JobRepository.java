@@ -11,12 +11,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 @Profile("jpa")
 public interface JobRepository extends JpaRepository<Job, Integer> {
-    // learning:searchTerm:company、tags (IgnoreCase),联合条件：(关键词 A OR 关键词 B) AND 用户ID
+    // learn;searchTerm:company、tags (IgnoreCase),联合条件：(关键词 A OR 关键词 B) AND 用户ID
     Page<Job> findByUserIdAndCompanyContainingIgnoreCaseOrUserIdAndTagsContainingIgnoreCase(
             Integer userId1, String companySearch,
             Integer userId2, String tagsSearch,
@@ -31,6 +32,18 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
     // learn;统计某个用户的所有记录总数
     long countByUserId(Integer userId);
 
+
+    //learn;ddl
+    @Query("SELECT COUNT(j) FROM Job j WHERE j.userId = :userId AND j.deadline BETWEEN :start AND :end")
+    long countByDeadlineRange(
+            @Param("userId") Integer userId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+    //截至事项
+    List<Job> findTop5ByUserIdAndDeadlineBetweenOrderByDeadlineAsc(
+            Integer userId, LocalDateTime start, LocalDateTime end
+    );
     // learn;自定义删除 只有 id 在列表中 且 user_id 等于当前用户的才会被删
     @Modifying
     @Transactional

@@ -11,7 +11,8 @@ export interface Job {
   company: string; // learn;接收方
   title: string; // learn;标题
   status: JobStatus; // learn;进度
-  reminderDate: string | null; // learn;提醒日期（ISO 字符串或 null）
+  reminderDate: string | null; // learn;提醒日期,可选（ISO 字符串或 null）
+  deadline: string; // learn;死线日期
   tags?: string; // learn;标签
   applyDate?: string; // learn;创建时间
   updateDate?: string; // learn;更新时间

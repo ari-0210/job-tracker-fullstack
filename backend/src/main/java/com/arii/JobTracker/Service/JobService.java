@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,16 @@ public class JobService {
     }
 
     public StatisticsDTO getAppStatistics(Integer userId) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime sevenDaysLater = now.plusDays(7);
+
+        // 本月截止：从现在起到本月最后一天 23:59:59
+        LocalDateTime endOfMonth = now.with(TemporalAdjusters.lastDayOfMonth())
+                .withHour(23).withMinute(59).withSecond(59);
+
+
+
+       //learn;
         long total = jobRepository.countByUserId(userId);
         List<Object[]> results = jobRepository.countJobsByStatus(userId);
 
@@ -81,8 +93,9 @@ public class JobService {
             // learn;result[0] 是 status (String/Enum), result[1] 是 count (Long)
             statusMap.put(result[0].toString(), (Long) result[1]);
         }
-
-        return new StatisticsDTO(total, statusMap);
+        long next7 = jobRepository.countByDeadlineRange(userId, now, sevenDaysLater);
+        long thisMonth = jobRepository.countByDeadlineRange(userId, now, endOfMonth);
+        return new StatisticsDTO(total, statusMap,next7, thisMonth);
     }
 
 

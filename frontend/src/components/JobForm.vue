@@ -21,6 +21,15 @@
             placeholder="Input Title(请输入事项标题)"
           />
         </n-form-item>
+        <n-form-item label="deadline">
+          <n-date-picker
+            v-model:formatted-value="formModel.deadline"
+            type="datetime"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="'09:00:00'"
+          />
+        </n-form-item>
         <n-form-item label="ReminderDate">
           <n-date-picker
             v-model:formatted-value="formModel.reminderDate"
@@ -82,7 +91,7 @@ const emit = defineEmits<{
   (e: "save", data: Job): void;
 }>();
 
-// learn：当弹窗打开时，根据 initialData 初始化表单
+// learn;当弹窗打开时，根据 initialData 初始化表单
 watch(
   () => props.show,
   (isShowing) => {
