@@ -3,12 +3,12 @@ package com.arii.JobTracker.Controller;
 import com.arii.JobTracker.DTO.StatisticsDTO;
 import com.arii.JobTracker.Service.JobService;
 import com.arii.JobTracker.Service.UserService;
+import com.arii.JobTracker.pojo.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,8 +25,7 @@ public class StatsController {
 
 
     @GetMapping("/summary")
-    public ResponseEntity<StatisticsDTO> getSummary(@AuthenticationPrincipal UserDetails userDetails) {
-        Integer currentUserId = userService.findByUsername(userDetails.getUsername()).getId();
-        return ResponseEntity.ok(jobService.getAppStatistics(currentUserId));
+    public ResponseEntity<StatisticsDTO> getSummary(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(jobService.getAppStatistics(user.getId()));
     }
 }

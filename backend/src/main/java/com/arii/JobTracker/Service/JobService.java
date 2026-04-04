@@ -26,7 +26,7 @@ public class JobService {
     @Autowired
     private JobRepository jobRepository;
 
-    //learning:把所有增删改查的方法都加上 userId 参数
+    //learn;把所有增删改查的方法都加上 userId 参数
     public Job createJob(Integer userId, Job job) {
         job.setUserId(userId);
         Job savedJob = jobRepository.save(job);
@@ -35,7 +35,7 @@ public class JobService {
         return savedJob;
     }
 
-    // r
+    // leran;查找
     public Page<Job> findAllJobs(Integer userId, int pageNumber, int pageSize, String searchTerm) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("updateDate").descending());
         if (StringUtils.hasText(searchTerm)) { // learning:用StringUtils 检查关键字是否为空
@@ -48,7 +48,7 @@ public class JobService {
 
     }
 
-    // u
+    // learn;改
     @Transactional
     public Job updateJob(Integer userId, Job job) {
         Job existingJob = jobRepository.findById(job.getId())
@@ -65,7 +65,7 @@ public class JobService {
         return saveJob;
     }
 
-    // d
+    // learn;删
     public void deleteJob(Integer userId, Integer jobId) {
         // learning:不仅仅通过 id 删，还要确认这个 id 确实属于这个 userId
         Job job = jobRepository.findById(jobId)
@@ -129,6 +129,13 @@ public class JobService {
         return new StatisticsDTO(total, statusMap,next7, thisMonth);
     }
 
-
+    //learn;获取紧急事项
+    public List<Job> getUrgentJobs(Integer userId) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime sevenDaysLater = now.plusDays(7);
+        return jobRepository.findTop5ByUserIdAndDeadlineBetweenOrderByDeadlineAsc(
+                userId, now, sevenDaysLater
+        );
+    }
 
 }

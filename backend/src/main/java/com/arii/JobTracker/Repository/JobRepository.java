@@ -41,8 +41,11 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
             @Param("end") LocalDateTime end
     );
     //截至事项
+    // 查找未来 7 天内截止的前 5 条
     List<Job> findTop5ByUserIdAndDeadlineBetweenOrderByDeadlineAsc(
-            Integer userId, LocalDateTime start, LocalDateTime end
+            Integer userId,
+            LocalDateTime start,
+            LocalDateTime end
     );
     // learn;自定义删除 只有 id 在列表中 且 user_id 等于当前用户的才会被删
     @Modifying
