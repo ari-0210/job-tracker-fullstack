@@ -1,15 +1,32 @@
 <template>
-  <div class="flex-col items-center justify-center p-4">
-    <h1>About DDL Tracker</h1>
-    <p class="relative border-1 max-w-4xl">
-      This project is a resume delivery tracking system to help users record and
-      manage jobs, companies, delivery status in the job search process, to
-      facilitate real-time control of the progress of job search.
-      该项目是一个基于 RESTful 架构 的全栈工作记录管理平台。通过 Docker
-      容器化技术 实现了前端、后端与数据库的一键式部署，并利用 Nginx 反向代理
-      解决了跨域与 API 路由分发问题。项目支持完整的 JWT 认证体系与 CRUD
-      业务逻辑。
-    </p>
-    <b>Developer:Ari</b>
+  <div class="max-w-4xl mx-auto p-6">
+    <n-card title="DeadlineTracker" size="huge" class="rounded-3xl shadow-lg">
+      <div class="space-y-6 text-gray-600">
+        <p class="text-lg">
+          这是一个进度管理工具，旨在解决投递记录碎片化的问题。
+        </p>
+
+        <n-divider title-placement="left">技术架构</n-divider>
+        <div class="grid grid-cols-2 gap-4">
+          <n-tag type="info" bordered>Spring Boot 3.x</n-tag>
+          <n-tag type="info" bordered>Vue 3.x + Vite</n-tag>
+          <n-tag type="info" bordered>Redis 7.x 缓存</n-tag>
+          <n-tag type="info" bordered>MySQL 8.x 持久化</n-tag>
+          <n-tag type="info" bordered>Tailwind CSS v4</n-tag>
+          <n-tag type="info" bordered>Naive UI</n-tag>
+        </div>
+
+        <n-divider title-placement="left">核心功能</n-divider>
+        <n-list>
+          <n-list-item>🔥 实时可视化看板：一眼掌握投递进度</n-list-item>
+          <n-list-item>⚡ Redis 高性能缓存：Dashboard 秒级响应</n-list-item>
+          <n-list-item>📅 紧迫事项提醒：拒绝错过任何一个 DDL</n-list-item>
+        </n-list>
+
+        <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-sm">
+          Developer:Ari
+        </div>
+      </div>
+    </n-card>
   </div>
 </template>

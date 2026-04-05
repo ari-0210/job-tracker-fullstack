@@ -8,7 +8,7 @@ export function useJobForm(initialData = {}) {
     reminderDate: null,
     status: "DRAFT",
     tags: "",
-    deadline: "2026-12-31 23:59:59",
+    deadline: new Date().toISOString().split("T")[0] + " 23:59:59",
     ...initialData,
   });
 
@@ -19,7 +19,7 @@ export function useJobForm(initialData = {}) {
       reminderDate: null,
       status: "DRAFT",
       tags: "",
-      deadline: "2026-12-31 23:59:59",
+      deadline: new Date().toISOString().split("T")[0] + " 23:59:59",
     };
   };
 

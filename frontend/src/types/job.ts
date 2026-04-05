@@ -1,6 +1,6 @@
 export interface Result<T> {
   code: number;
-  message: string;
+  msg: string;
   data: T; // learn;T 是泛型，代表具体的数据内容
 }
 

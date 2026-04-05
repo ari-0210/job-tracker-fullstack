@@ -53,7 +53,11 @@
       <n-gi>
         <n-card title="⚠️紧迫事项 (未来7天截止)">
           <n-list hoverable clickable v-if="statsStore.urgentJobs.length > 0">
-            <n-list-item v-for="job in statsStore.urgentJobs" :key="job.id">
+            <n-list-item
+              v-for="job in statsStore.urgentJobs"
+              :key="job.id"
+              @click="handleJobClick(job)"
+            >
               <div class="flex justify-between items-center">
                 <div>
                   <div class="font-medium text-gray-800">
@@ -86,6 +90,8 @@
 import { useStatsStore } from "@/stores/stats";
 import { onMounted, computed } from "vue";
 import { getStatusLabel } from "@/constants/job";
+import { useRouter } from "vue-router";
+import type { Job } from "@/types/job";
 const statsStore = useStatsStore();
 
 const chartOption = computed(() => {
@@ -113,6 +119,14 @@ const chartOption = computed(() => {
     ],
   };
 });
+
+const router = useRouter();
+const handleJobClick = (job: Job) => {
+  router.push({
+    name: "home",
+    query: { editId: job.id }, // learn;携带想要编辑的任务 ID
+  });
+};
 onMounted(() => {
   statsStore.fetchSummary();
   statsStore.fetchUrgentJobs();
