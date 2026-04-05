@@ -8,7 +8,8 @@ export function useJobForm(initialData = {}) {
     reminderDate: null,
     status: "DRAFT",
     tags: "",
-    ...initialData, // learn;如果是修改，会覆盖默认值
+    deadline: "2026-12-31 23:59:59",
+    ...initialData,
   });
 
   const resetForm = () => {
@@ -18,6 +19,7 @@ export function useJobForm(initialData = {}) {
       reminderDate: null,
       status: "DRAFT",
       tags: "",
+      deadline: "2026-12-31 23:59:59",
     };
   };
 

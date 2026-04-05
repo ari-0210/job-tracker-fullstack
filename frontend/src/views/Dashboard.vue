@@ -35,19 +35,50 @@
         </n-card>
       </n-gi>
     </n-grid>
-
-    <n-card title="申请状态分布">
-      <div style="height: 400px; width: 100%">
-        <p v-if="statsStore.loading">加载中...</p>
-        <div id="chart-container" v-else style="width: 100%; height: 100%">
-          <v-chart
-            v-if="statsStore.summary.totalCount > 0"
-            :option="chartOption"
-            autoresize
-          /><n-empty v-else description="提交一些事项后再来看看吧" />
-        </div>
-      </div>
-    </n-card>
+    <n-grid :cols="2" :x-gap="12">
+      <n-gi>
+        <n-card title="申请状态分布">
+          <div style="height: 400px; width: 100%">
+            <p v-if="statsStore.loading">加载中...</p>
+            <div id="chart-container" v-else style="width: 100%; height: 100%">
+              <v-chart
+                v-if="statsStore.summary.totalCount > 0"
+                :option="chartOption"
+                autoresize
+              /><n-empty v-else description="提交一些事项后再来看看吧" />
+            </div>
+          </div>
+        </n-card>
+      </n-gi>
+      <n-gi>
+        <n-card title="⚠️紧迫事项 (未来7天截止)">
+          <n-list hoverable clickable v-if="statsStore.urgentJobs.length > 0">
+            <n-list-item v-for="job in statsStore.urgentJobs" :key="job.id">
+              <div class="flex justify-between items-center">
+                <div>
+                  <div class="font-medium text-gray-800">
+                    {{ job.company }}
+                  </div>
+                  <div class="text-sm text-gray-500">{{ job.title }}</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-red-500 font-mono font-bold">
+                    截止：{{ job.deadline.replace("T", " ") }}
+                  </div>
+                  <n-tag
+                    :type="job.status === 'INTERVIEWING' ? 'info' : 'warning'"
+                    size="small"
+                  >
+                    {{ job.status }}
+                  </n-tag>
+                </div>
+              </div>
+            </n-list-item>
+          </n-list>
+          <n-empty v-else description="目前没有紧迫的任务，Relax！" />
+        </n-card>
+      </n-gi>
+    </n-grid>
   </n-space>
 </template>
 
@@ -84,5 +115,6 @@ const chartOption = computed(() => {
 });
 onMounted(() => {
   statsStore.fetchSummary();
+  statsStore.fetchUrgentJobs();
 });
 </script>

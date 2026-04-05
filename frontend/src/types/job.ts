@@ -1,3 +1,9 @@
+export interface Result<T> {
+  code: number;
+  message: string;
+  data: T; // learn;T 是泛型，代表具体的数据内容
+}
+
 //learn;申请类型
 export type JobStatus =
   | "DRAFT"

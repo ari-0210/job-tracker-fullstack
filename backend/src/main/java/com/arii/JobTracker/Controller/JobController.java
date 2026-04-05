@@ -86,9 +86,5 @@ public class JobController {
             return ResponseEntity.ok(updatedJob);
     }
 
-    @Operation(summary = "获取紧急事项")
-    @GetMapping("/urgent")
-    public Result<List<Job>> getUrgentJobs(@AuthenticationPrincipal User user) {
-        return Result.success(jobService.getUrgentJobs(user.getId()));
-    }
+
 }

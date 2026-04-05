@@ -19,29 +19,29 @@ public class UserService {
 
     @Transactional
     public User createUser(UserCreateRequestDto userDto) {
-        //  learning:检查用户名是否已存在
+        //  learn;检查用户名是否已存在
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
             throw new RuntimeException("Error: Username is already taken!");
         }
 
-        //  创建新的 User 实体对象
+        //  learn;创建新的 User 实体对象
         User newUser = new User();
         newUser.setUsername(userDto.getUsername());
 
-        //  对密码进行哈希加密
+        //  learn;对密码进行哈希加密
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        //  设置角色 (从 DTO 获取，或者给一个默认角色)
+        //  learn;设置角色 (从 DTO 获取，或者给一个默认角色)
         newUser.setRoles(userDto.getRoles());
 
         //  enabled 字段使用 User 实体中定义的 Java 默认值 (private boolean enabled = true;)
         // 显式控制  newUser.setEnabled(true); 或 newUser.setEnabled(userDto.isEnabled());
 
-        //  保存到数据库
+        //  learn;保存到数据库
         return userRepository.save(newUser);
     }
 
-    //learning:Users实体
+    //learn;Users实体
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Error: User not found."));

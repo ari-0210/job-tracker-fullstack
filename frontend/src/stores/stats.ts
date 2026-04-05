@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { getStatsSummary } from "@/api/stats";
+import { getStatsSummary, getUrgentJobs } from "@/api/stats";
 import type { StatsSummary } from "@/types/stats";
+import type { Job } from "@/types/job";
 
 export const useStatsStore = defineStore("stats", () => {
   const summary = ref<StatsSummary>({
@@ -24,5 +25,12 @@ export const useStatsStore = defineStore("stats", () => {
     }
   };
 
-  return { summary, loading, fetchSummary };
+  const urgentJobs = ref<Job[]>([]); // learn;存储紧迫事项列表
+
+  const fetchUrgentJobs = async () => {
+    const res = await getUrgentJobs();
+    urgentJobs.value = res.data.data;
+  };
+
+  return { summary, loading, fetchSummary, fetchUrgentJobs, urgentJobs };
 });
