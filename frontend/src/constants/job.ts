@@ -1,17 +1,18 @@
 import type { JobStatus } from "@/types/job";
 
-interface StatusOption {
-  label: string;
-  value: JobStatus;
-}
+export const STATUS_MAP: Record<JobStatus, { label: string; color: string }> = {
+  DRAFT: { label: "草稿", color: "#ee6666" },
+  APPLIED: { label: "已投递", color: "#fac858" },
+  INTERVIEWING: { label: "面试中", color: "#73c0de" },
+  COMPLETED: { label: "已完成", color: "#91cc75" },
+  REJECTED: { label: "被拒绝", color: "#5470c6" },
+} as const;
 
-export const STATUS_OPTIONS: StatusOption[] = [
-  { value: "DRAFT", label: "草稿" },
-  { value: "APPLIED", label: "已投递" },
-  { value: "INTERVIEWING", label: "面试中" },
-  { value: "COMPLETED", label: "已完成" },
-  { value: "REJECTED", label: "被拒绝" },
-];
+export const STATUS_OPTIONS = Object.entries(STATUS_MAP).map(([key, info]) => ({
+  value: key,
+  label: info.label,
+  color: info.color,
+}));
 
 export const getStatusLabel = (statusValue: string) => {
   const option = STATUS_OPTIONS.find((opt) => opt.value === statusValue);

@@ -83,16 +83,20 @@
         </n-card>
       </n-gi>
     </n-grid>
+    <n-card><job-calendar></job-calendar></n-card>
   </n-space>
 </template>
 
 <script setup lang="ts">
 import { useStatsStore } from "@/stores/stats";
+import { useJobStore } from "@/stores/job";
 import { onMounted, computed } from "vue";
 import { getStatusLabel } from "@/constants/job";
 import { useRouter } from "vue-router";
 import type { Job } from "@/types/job";
+import JobCalendar from "@/components/JobCalendar.vue";
 const statsStore = useStatsStore();
+const jobStore = useJobStore();
 
 const chartOption = computed(() => {
   // learn; 先准备好数据数组
@@ -127,7 +131,10 @@ const handleJobClick = (job: Job) => {
     query: { editId: job.id }, // learn;携带想要编辑的任务 ID
   });
 };
-onMounted(() => {
+onMounted(async () => {
+  if (jobStore.jobs.length === 0) {
+    await jobStore.fetchJobs();
+  }
   statsStore.fetchSummary();
   statsStore.fetchUrgentJobs();
 });

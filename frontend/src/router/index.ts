@@ -37,15 +37,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   // learn;用pinia
   const authStore = useAuthStore();
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: "Login" });
-  } else if (to.name === "Login" && authStore.isAuthenticated) {
-    next({ name: "home" });
-  } else {
-    next();
+    return { name: "Login" };
+  }
+  if (to.name === "Login" && authStore.isAuthenticated) {
+    return { name: "home" };
   }
 });
 
