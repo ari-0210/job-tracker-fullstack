@@ -8,11 +8,19 @@
     :page-sizes="[10, 20, 30, 40]"
     show-quick-jumper
     :disabled="jobStore.loading"
-    style="margin-top: 20px; display: flex; justify-content: flex-end"
+    class="mt-5 flex justify-end"
   />
 </template>
 
 <script setup lang="ts">
 import { useJobStore } from "@/stores/job";
+import { watch } from "vue";
 const jobStore = useJobStore();
+
+watch(
+  [() => jobStore.queryParams.page, () => jobStore.queryParams.size],
+  () => {
+    jobStore.fetchJobs();
+  },
+);
 </script>

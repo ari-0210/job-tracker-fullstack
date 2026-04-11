@@ -82,10 +82,8 @@ export const useJobStore = defineStore("job", () => {
 
   // learn;删除逻辑
   const removeJob = async (id: number) => {
-    if (confirm("确定要删除吗？")) {
-      await jobApi.deleteJob(id);
-      await fetchJobs();
-    }
+    await jobApi.deleteJob(id);
+    await fetchJobs();
   };
 
   // learn;批量删除

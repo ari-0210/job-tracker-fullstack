@@ -5,7 +5,7 @@
     class="p-4 flex justify-between items-center"
   >
     <n-menu mode="horizontal" :options="menuOptions" />
-    <n-button @click.prevent="logout" quaternary type="error">Logout</n-button>
+    <n-button @click="logout" quaternary type="error">Logout</n-button>
   </n-layout-header>
   <router-view />
 </template>
