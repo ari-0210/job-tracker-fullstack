@@ -18,6 +18,10 @@ export default defineConfig({
         target: "http://localhost:8080", // learn;后端运行地址和端口
         changeOrigin: true,
       },
+      "/upload": {
+        target: "http://localhost:8080", // learn;后端运行地址和端口
+        changeOrigin: true,
+      },
     },
   },
 });

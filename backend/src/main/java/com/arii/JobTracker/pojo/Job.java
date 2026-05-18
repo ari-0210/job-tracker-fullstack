@@ -22,7 +22,6 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    //Learning:---新增---
 
     @Column(name ="user_id",nullable = false)
     private  Integer userId;

@@ -32,13 +32,17 @@
           <th>Operation</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody hoverable clickable>
         <tr v-if="jobStore.jobs.length === 0 && !jobStore.loading">
           <td colspan="9" style="text-align: center">
             No submissions found(没有事项).
           </td>
         </tr>
-        <tr v-for="job in jobStore.jobs" :key="job.id">
+        <tr
+          v-for="job in jobStore.jobs"
+          :key="job.id"
+          @click="handleOpenDetail(job.id)"
+        >
           <td style="text-align: center">
             <n-checkbox
               :checked="selectedJobIds.has(job.id!)"
@@ -68,7 +72,7 @@
         </tr>
       </tbody>
     </n-table>
-
+    <JobDetail v-model:show="showDrawer" :job-id="selectedJobId" />
     <JobPagination />
   </div>
 </template>
@@ -76,13 +80,23 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, computed } from "vue";
 import { useJobStore } from "@/stores/job";
-
 import { getStatusLabel, getStatusType } from "@/constants/job";
 import JobPagination from "./JobPagination.vue";
+import JobDetail from "./JobDetail.vue";
 
 const jobStore = useJobStore();
 
 const fetchError = ref(null);
+
+//learn;详情页
+const showDrawer = ref(false);
+const selectedJobId = ref<number | null>(null);
+
+const handleOpenDetail = (id: number | undefined) => {
+  if (id === undefined) return;
+  selectedJobId.value = id;
+  showDrawer.value = true; // 打开侧边栏
+};
 
 // learn;---批量选中和批量删除----
 const selectedJobIds = ref(new Set<number>()); // 使用 Set 存储选中的 job ID，方便添加、删除和检查存在性

@@ -30,7 +30,10 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      (error.response && error.response.status === 401) ||
+      error.response?.status === 403
+    ) {
       const authStore = useAuthStore();
       authStore.logout(); // learn;清除本地过期的 token
       router.push({ name: "Login" });

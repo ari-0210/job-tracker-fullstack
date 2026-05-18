@@ -26,7 +26,7 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userDetailsService; //  UserDetailsService
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter; //  JWT 请求过滤器
+    private JwtRequestFilter jwtRequestFilter; //  learn;JWT 请求过滤器
 
     // learning: 定义 PasswordEncoder Bean
     @Bean
@@ -39,6 +39,8 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+
 
     // learning: 定义 SecurityFilterChain Bean 配置安全规则
     @Bean
@@ -55,12 +57,16 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 配置 HTTP 请求的授权规则
+                // learn;配置 HTTP 请求的授权规则
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/files/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )

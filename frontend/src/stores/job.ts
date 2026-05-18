@@ -101,7 +101,6 @@ export const useJobStore = defineStore("job", () => {
     formMode,
     currentJob,
     fetchError,
-    // 导出方法
     fetchJobs,
     bulkDelete,
     handleSearch,

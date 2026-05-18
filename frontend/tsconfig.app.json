@@ -16,6 +16,7 @@
     "strict": true,
 
     /* learn;路径映射 */
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
@@ -38,6 +39,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/**/*.js",
-    "src/router/index.js"
+    "src/router/index.js",
+    "src/**/*.d.ts"
   ]
 }

@@ -23,11 +23,11 @@ export const STATUS_TYPE_MAP: Record<
   string,
   "default" | "info" | "warning" | "success" | "error"
 > = {
-  DRAFT: "default", // 灰色
-  APPLIED: "info", // 蓝色
-  INTERVIEWING: "warning", // 橙色
-  COMPLETED: "success", // 绿色
-  REJECTED: "error", // 红色
+  DRAFT: "default", 
+  APPLIED: "info", 
+  INTERVIEWING: "warning", 
+  COMPLETED: "success", 
+  REJECTED: "error", 
 };
 
 export const getStatusType = (status: string) => {

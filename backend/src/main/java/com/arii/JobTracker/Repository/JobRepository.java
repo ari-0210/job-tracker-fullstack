@@ -40,8 +40,8 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
-    //截至事项
-    // 查找未来 7 天内截止的前 5 条
+
+    // learn;查找未来 7 天内截止的前 5 条
     List<Job> findTop5ByUserIdAndDeadlineBetweenOrderByDeadlineAsc(
             Integer userId,
             LocalDateTime start,
