@@ -66,9 +66,14 @@
                     >
                       <template #icon><DownloadOutline /></template>
                     </n-button>
-                    <n-button quaternary circle type="error">
-                      <template #icon><TrashOutline /></template>
-                    </n-button>
+                    <n-popconfirm @positive-click="deleteFile(file.id)">
+                      <template #trigger>
+                        <n-button quaternary circle type="error">
+                          <template #icon><TrashOutline /></template>
+                        </n-button>
+                      </template>
+                      确定要永久删除这个附件吗？
+                    </n-popconfirm>
                   </n-space>
                 </div>
               </n-list-item>
@@ -156,6 +161,18 @@ const handlePreview = (file: any) => {
   const fileUrl = `/uploads/${file.savedFileName}`;
   // learn;告诉浏览器这是一个新窗口打开，浏览器会根据文件类型决定预览还是下载
   window.open(fileUrl, "_blank");
+};
+
+//learn;删除文件
+const deleteFile = async (id: number) => {
+  try {
+    await FileApi.deleteFile(id);
+    window.$message?.success("文件删除成功");
+    console.log(`文件 ID: ${id} 已成功从视图中移除`);
+  } catch (error: any) {
+    console.error("删除文件失败:", error);
+    window.$message?.error("文件删除失败，请稍后重试");
+  }
 };
 
 const handleDownload = (file: any) => {
