@@ -13,4 +13,5 @@ public interface FileService {
     List<JobFile> getFilesByJobId(Integer jobId);
 
     void deleteFileById(Integer id); // 新增的删除接口
+
 }

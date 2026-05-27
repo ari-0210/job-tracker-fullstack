@@ -36,7 +36,8 @@ public class Job {
 
     private String tags;
     private String title;
-
+    @Column(columnDefinition = "TEXT")
+    private String notes;
 
     // Learning:创建时间：只在插入时设置，之后不可更改
     @CreatedDate
@@ -59,6 +60,7 @@ public class Job {
     @Column(name = "reminder_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reminderDate;
+
 
 
 }

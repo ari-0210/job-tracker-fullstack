@@ -22,6 +22,7 @@ export interface Job {
   tags?: string; // learn;标签
   applyDate?: string; // learn;创建时间
   updateDate?: string; // learn;更新时间
+  notes?: string; //learn;备注
 }
 
 export interface JobQueryParams {

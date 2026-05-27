@@ -19,10 +19,14 @@
           </n-descriptions>
 
           <n-card title="备注" size="small">
-            <p v-if="!jobDetail?.notes" class="text-gray-400">
-              点击编辑添加备注...
-            </p>
-            <p v-else>{{ jobDetail.notes }}</p>
+            <n-input
+              v-model:value="noteText"
+              type="textarea"
+              placeholder="点击添加备注（回车或点击空白处保存）..."
+              :autosize="{ minRows: 2, maxRows: 6 }"
+              @keyup.enter="handleNoteSave"
+              @blur="handleNoteSave"
+            />
           </n-card>
 
           <n-card title="附件中心" size="small">
@@ -155,6 +159,32 @@ watch(
   },
   { immediate: true },
 );
+
+//learn;备注
+
+const noteText = ref("");
+
+// learn;切换任务时，把当前备注同步给输入框
+watch(
+  () => jobDetail.value?.notes,
+  (newNotes) => {
+    noteText.value = newNotes || "";
+  },
+  { immediate: true },
+);
+
+const handleNoteSave = async () => {
+  if (!jobDetail.value) return;
+
+  const finalData = {
+    ...jobDetail.value,
+    notes: noteText.value,
+  };
+
+  await jobStore.saveJob(finalData);
+
+  jobDetail.value.notes = noteText.value;
+};
 
 const handlePreview = (file: any) => {
   if (!file.savedFileName) return;

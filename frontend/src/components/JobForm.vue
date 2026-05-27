@@ -97,7 +97,7 @@ watch(
   (isShowing) => {
     if (isShowing) {
       if (props.mode === "edit" && props.initialData) {
-        formModel.value = { ...props.initialData }; // 编辑模式：克隆
+        formModel.value = { ...props.initialData }; // learn;编辑模式：克隆
       } else {
         resetForm();
       }
