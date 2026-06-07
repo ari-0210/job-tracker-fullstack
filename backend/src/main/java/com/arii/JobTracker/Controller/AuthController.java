@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
     public class AuthController {
 
         @Autowired
-        private AuthenticationManager authenticationManager; // learning:用于实际的认证处理
+        private AuthenticationManager authenticationManager; // learn:用于实际的认证处理
 
         @Autowired
         private JwtUtil jwtUtil;
@@ -66,7 +66,7 @@ import org.springframework.web.bind.annotation.RestController;
                 return ResponseEntity.status(401).body("Incorrect username or password");
             }
 
-        // learning:加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
+        // learn:加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
             // 生成 JWT

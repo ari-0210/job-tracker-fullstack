@@ -1,7 +1,6 @@
 package com.arii.JobTracker.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // Learning:监听审计事件
+@EntityListeners(AuditingEntityListener.class) // Learn:监听审计事件
 @Table(name = "submissions")
 @Entity
 public class Job {
@@ -26,7 +25,7 @@ public class Job {
     @Column(name ="user_id",nullable = false)
     private  Integer userId;
 
-    @Schema(description = "接收方", example = "投递公司名")
+    //接收方
     @Column(name = "recipient")
     private String company;
 
@@ -39,24 +38,24 @@ public class Job {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    // Learning:创建时间：只在插入时设置，之后不可更改
+    // Learn;创建时间：只在插入时设置，之后不可更改
     @CreatedDate
     @Column(name = "submit_date", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate applyDate;
 
-    // Learning:修改时间：每次更新都会自动刷新
+    // Learn;修改时间：每次更新都会自动刷新
     @LastModifiedDate
     @Column(name = "update_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDate;
 
-    //learning:ddl
+    //learn;ddl
     @Column(name = "deadline", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deadline;
 
-    //learning:ddl->提醒时间
+    //learn;ddl->提醒时间
     @Column(name = "reminder_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reminderDate;

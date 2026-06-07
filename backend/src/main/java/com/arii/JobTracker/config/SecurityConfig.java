@@ -18,41 +18,39 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity // 启用 Spring Security 的 Web 安全功能
+@EnableWebSecurity // learn;启用 Spring Security 的 Web 安全功能
 @EnableMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig {
     @Autowired
-    private UserDetailsServiceImpl userDetailsService; //  UserDetailsService
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter; //  learn;JWT 请求过滤器
 
-    // learning: 定义 PasswordEncoder Bean
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // learning:用 AuthenticationManager Bean，AuthController 进行用户凭证的显式认证
+    // learn;用 AuthenticationManager Bean，AuthController 进行用户凭证的显式认证
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
 
-
-    // learning: 定义 SecurityFilterChain Bean 配置安全规则
+    // learn;定义 SecurityFilterChain Bean 配置安全规则
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // 禁用 CSRF (因为JWT通常无状态，CSRF 保护依赖于 session)
+                // learn;禁用 CSRF (因为JWT通常无状态，CSRF 保护依赖于 session)
                 .csrf(csrf -> csrf.disable())
 
-                // 配置 CORS
+                // learn;配置 CORS
                 .cors(withDefaults())
 
-                // 将 Session 管理配置为无状态 (STATELESS)
+                // learn;将 Session 管理配置为无状态 (STATELESS)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -67,11 +65,16 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/api/files/**").permitAll()
+                        // 对 Knife4j / Swagger 的所有静态资源和接口全量放行
+                        .requestMatchers("/doc.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+
+                        // 对 Spring Boot 3 降维打击的核心：必须允许匿名访问 /error
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
 
-                // learning:自定义 JWT 请求过滤器添加到过滤器链中
+                // learn;自定义 JWT 请求过滤器添加到过滤器链中
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

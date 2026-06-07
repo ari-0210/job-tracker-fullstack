@@ -34,9 +34,6 @@ public class UserService {
         //  learn;设置角色 (从 DTO 获取，或者给一个默认角色)
         newUser.setRoles(userDto.getRoles());
 
-        //  enabled 字段使用 User 实体中定义的 Java 默认值 (private boolean enabled = true;)
-        // 显式控制  newUser.setEnabled(true); 或 newUser.setEnabled(userDto.isEnabled());
-
         //  learn;保存到数据库
         return userRepository.save(newUser);
     }
