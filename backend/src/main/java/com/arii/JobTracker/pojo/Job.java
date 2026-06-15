@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class) // Learn:监听审计事件
-@Table(name = "submissions")
+@Table(name = "submissions", indexes = {
+        @Index(name = "idx_user_id", columnList = "user_id"), // 1. 把原有的 user_id 索引写进来
+        @Index(name = "idx_reminder_date", columnList = "reminder_date") // 2. 新增的提醒时间索引
+})
 @Entity
 public class Job {
     @Id

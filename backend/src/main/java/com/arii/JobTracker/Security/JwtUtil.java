@@ -29,7 +29,6 @@ public class JwtUtil {
     private long expirationTimeInMs;
 
     private SecretKey getSigningKey() {
-        //  learn;secret 字符串直接用作密钥种子 (测试用)
         if (secret == null || secret.length() < 32) {
             // learn;密钥至少32字节长
             throw new IllegalArgumentException("JWT secret key must be at least 256 bits (32 bytes) long.");

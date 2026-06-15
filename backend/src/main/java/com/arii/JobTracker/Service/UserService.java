@@ -27,7 +27,6 @@ public class UserService {
         //  learn;创建新的 User 实体对象
         User newUser = new User();
         newUser.setUsername(userDto.getUsername());
-
         //  learn;对密码进行哈希加密
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 

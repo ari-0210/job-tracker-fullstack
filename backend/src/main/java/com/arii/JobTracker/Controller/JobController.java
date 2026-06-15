@@ -6,6 +6,8 @@ import com.arii.JobTracker.Service.JobService;
 import com.arii.JobTracker.Service.UserService;
 import com.arii.JobTracker.VO.JobVO;
 import com.arii.JobTracker.VO.PageVO;
+import com.arii.JobTracker.common.Result;
+import com.arii.JobTracker.common.ResultCode;
 import com.arii.JobTracker.pojo.Job;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,11 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -39,25 +38,20 @@ public class JobController {
 
     @Operation(summary = "新增事项")
     @PostMapping
-    public ResponseEntity<JobVO> createJob(@Valid @RequestBody JobDTO jobDTO) {
+    public Result<JobVO> createJob(@Valid @RequestBody JobDTO jobDTO) {
 
         Job createdJob = jobService.createJob(jobDTO);
         JobVO vo = new JobVO();
         BeanUtils.copyProperties(createdJob, vo);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(createdJob.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(vo);
+        return Result.success(vo);
     }
 
     //learn;userId 通常不会作为 @RequestParam 让前端传过来。
 //learn;原因：如果让前端传 userId，用户可以随意把浏览器 URL 里的 userId=1 改成 userId=2，从而偷看别人的数据。
     @Operation(summary = "分页查询", description = "支持关键字模糊搜索，返回带分页信息的列表")
     @GetMapping
-    public ResponseEntity<PageVO<JobVO>> getAllJobs(
+    public Result<PageVO<JobVO>> getAllJobs(
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
@@ -75,39 +69,39 @@ public class JobController {
         }).toList();
 
         // 3. 组装成自定义的 PageVO 返回
-        return ResponseEntity.ok(new PageVO<>(jobsPage, voList));
+        return Result.success(new PageVO<>(jobsPage, voList));
     }
 
     @Operation(summary = "删除事项")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteJob(@PathVariable Integer id) {
+    public Result<Void> deleteJob(@PathVariable Integer id) {
         Integer userId = securityUtils.getCurrentUserId(); // 动态获取
         jobService.deleteJob(userId, id);
-        return ResponseEntity.noContent().build();
+        return Result.success();
     }
 
 
     @Operation(summary = "批量删除事项")
     @PostMapping("/batch-delete")
-    public ResponseEntity<Void> deleteMultipleJobs(@RequestBody Map<String, List<Integer>> payload) {
+    public Result<Void> deleteMultipleJobs(@RequestBody Map<String, List<Integer>> payload) {
 
         List<Integer> idsToDelete = payload.get("ids");
         if (idsToDelete == null || idsToDelete.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return Result.failed(ResultCode.BAD_REQUEST.getCode(), "删除传入的ID列表不能为空");
         }
         Integer userId = securityUtils.getCurrentUserId();
         jobService.deleteJobsByIds(userId, idsToDelete);
-        return ResponseEntity.noContent().build();
+        return Result.success();
     }
 
     @Operation(summary = "更新事项")
     @PutMapping("/{id}")
-    public ResponseEntity<JobVO> updateJob(@PathVariable Integer id, @Valid @RequestBody JobDTO jobDTO) {
+    public Result<JobVO> updateJob(@PathVariable Integer id, @Valid @RequestBody JobDTO jobDTO) {
         Integer userId = securityUtils.getCurrentUserId();
         Job updatedJob = jobService.updateJob(userId, id, jobDTO);
         JobVO vo = new JobVO();
         BeanUtils.copyProperties(updatedJob, vo);
-        return ResponseEntity.ok(vo);
+        return Result.success(vo);
     }
 
 

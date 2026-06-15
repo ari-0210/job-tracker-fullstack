@@ -5,11 +5,12 @@ import com.arii.JobTracker.DTO.LoginResponse;
 import com.arii.JobTracker.DTO.UserCreateRequestDto;
 import com.arii.JobTracker.Security.JwtUtil;
 import com.arii.JobTracker.Service.UserService;
+import com.arii.JobTracker.common.Result;
+import com.arii.JobTracker.common.ResultCode;
 import com.arii.JobTracker.pojo.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,43 +38,40 @@ import org.springframework.web.bind.annotation.RestController;
         private UserDetailsService userDetailsService;
 
         @Autowired
-        private UserService userService; // learning:注入新的 UserService
+        private UserService userService; // learn;注入新的 UserService
 
     @Operation(summary = "用户注册", description = "创建新账号并持久化到数据库")
         @PostMapping("/register")
-        public ResponseEntity<?> registerUser(@RequestBody UserCreateRequestDto userCreateRequest) {
-            try {
+    public Result<String> registerUser(@RequestBody UserCreateRequestDto userCreateRequest) {
+
                 User registeredUser = userService.createUser(userCreateRequest);
-                // learning:注册成功，可以返回成功信息，新创建的用户信息
-                return ResponseEntity.ok("User registered successfully! Username: " + registeredUser.getUsername());
-            } catch (RuntimeException e) {
-                // learning:例如用户名已存在的错误
-                return ResponseEntity.badRequest().body(e.getMessage());
-            }
+        // learn;注册成功，可以返回成功信息，新创建的用户信息,去掉try- catch
+        return Result.success("User registered successfully! Username: " + registeredUser.getUsername());
+
         }
 
     @Operation(summary = "用户登录", description = "验证账号密码并返回 JWT 访问令牌")
         @PostMapping("/login")
-        public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
+    public Result<LoginResponse> createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws Exception {
             Authentication authentication;
             try {
-                // learning:使用 AuthenticationManager 进行用户认证（ UserDetailsServiceImpl 和 PasswordEncoder）
+                // learn;使用 AuthenticationManager 进行用户认证（ UserDetailsServiceImpl 和 PasswordEncoder）
                 authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
                 );
             } catch (BadCredentialsException e) {
-                // 用户名或密码错误
-                return ResponseEntity.status(401).body("Incorrect username or password");
+                // learn;用户名或密码错误
+                return Result.failed(ResultCode.UNAUTHORIZED.getCode(), "Incorrect username or password");
             }
 
         // learn:加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
             final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            // 生成 JWT
+        // learn;生成 JWT
             final String jwt = jwtUtil.generateToken(userDetails);// 或者 jwtUtil.generateToken(userDetails)
 
-            // 返回 JWT 给前端
-            return ResponseEntity.ok(new LoginResponse(jwt, userDetails.getUsername()));
+        // learn;返回 JWT 给前端
+        return Result.success(new LoginResponse(jwt, userDetails.getUsername()));
         }
     }
 
