@@ -2,8 +2,10 @@ package com.arii.JobTracker.common;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 @Schema(description = "统一常规API响应外壳")
 public class Result<T> {
 

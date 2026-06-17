@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 事项核心管理控制层.
+ * <p>处理事项生命周期的全流程管理，内置基于多层过滤的多维度复杂检索，具备严格的隔离级越权安全防御.</p>
+ *
+ * @author Ari
+ */
 @Slf4j //learn;自动生成log
 @Tag(name = "01.申请事项管理", description = "处理申请事项的增删改查及统计")
 @RestController
@@ -36,6 +42,12 @@ public class JobController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 新增单条事项接口.
+     *
+     * @param jobDTO 包含新事项核心信息（如公司、标签、截止日期等）的合法数据载荷
+     * @return 包含生成主键ID及初始状态的 JobVO 视图数据外壳
+     */
     @Operation(summary = "新增事项")
     @PostMapping
     public Result<JobVO> createJob(@Valid @RequestBody JobDTO jobDTO) {
@@ -49,6 +61,16 @@ public class JobController {
 
     //learn;userId 通常不会作为 @RequestParam 让前端传过来。
 //learn;原因：如果让前端传 userId，用户可以随意把浏览器 URL 里的 userId=1 改成 userId=2，从而偷看别人的数据。
+
+    /**
+     * 分页多条件安全检索申请事项接口.
+     * <p>安全隔离原则：拒绝前端传入 userId 过滤条件，后端一律强行提取当前上下文登录 ID，彻底杜绝遍历 URL 水平越权窃取数据的可能.</p>
+     *
+     * @param keyword 模糊搜索关键字（支持公司名、标签等多维度模糊搜索），非必填
+     * @param page    当前页码索引，从 0 开始，默认值为 0
+     * @param size    每页期望拉取的数据条数，默认值为 10
+     * @return 复合 PageVO 规范的分页高内聚响应实体外壳
+     */
     @Operation(summary = "分页查询", description = "支持关键字模糊搜索，返回带分页信息的列表")
     @GetMapping
     public Result<PageVO<JobVO>> getAllJobs(
@@ -72,6 +94,12 @@ public class JobController {
         return Result.success(new PageVO<>(jobsPage, voList));
     }
 
+    /**
+     * 根据主键ID安全删除事项.
+     *
+     * @param id 待移除的事项唯一主键ID
+     * @return 统一无业务载荷成功响应外壳
+     */
     @Operation(summary = "删除事项")
     @DeleteMapping("/{id}")
     public Result<Void> deleteJob(@PathVariable Integer id) {
@@ -80,7 +108,12 @@ public class JobController {
         return Result.success();
     }
 
-
+    /**
+     * 批量安全清理事项接口.
+     *
+     * @param payload 键值对形式的包裹体，预期包含名为 "ids" 的整型主键数组
+     * @return 统一成功状态码响应
+     */
     @Operation(summary = "批量删除事项")
     @PostMapping("/batch-delete")
     public Result<Void> deleteMultipleJobs(@RequestBody Map<String, List<Integer>> payload) {
@@ -94,6 +127,13 @@ public class JobController {
         return Result.success();
     }
 
+    /**
+     * 根据ID安全更新事项数据载荷接口.
+     *
+     * @param id 待修改的目标事项主键ID
+     * @param jobDTO 包含更新后干货内容的数据传输对象
+     * @return 修改成功并完成持久化后的最新 JobVO 视图外壳
+     */
     @Operation(summary = "更新事项")
     @PutMapping("/{id}")
     public Result<JobVO> updateJob(@PathVariable Integer id, @Valid @RequestBody JobDTO jobDTO) {

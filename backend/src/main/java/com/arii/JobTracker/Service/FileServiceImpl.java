@@ -6,10 +6,10 @@ import com.arii.JobTracker.Repository.JobRepository;
 import com.arii.JobTracker.Security.SecurityUtils;
 import com.arii.JobTracker.pojo.Job;
 import com.arii.JobTracker.pojo.JobFile;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,26 +27,29 @@ public class FileServiceImpl implements FileService {
     private JobFileRepository fileRepository;
     @Autowired
     private SecurityUtils securityUtils;
+
     @Autowired
     private JobRepository jobRepository;
+
     @Value("${file.upload-path}") // learn;从配置文件读取存放路径
     private String uploadPath;
 
+    @Override
     public JobFile storeFile(MultipartFile file, Job job) throws IOException {
-        //learn; 1. 确保目录存在
+        // 自动探测并防御性创建缺失的本地存储目录
         File directory = new File(uploadPath);
         if (!directory.exists()) directory.mkdirs();
 
-        // learn;2. 生成唯一文件名
+        // 提取扩展名，利用全局唯一 UUID 重命名，切断公网恶意重名覆盖的可能
         String originalName = file.getOriginalFilename();
         String extension = originalName.substring(originalName.lastIndexOf("."));
         String savedName = UUID.randomUUID().toString() + extension;
 
-        // learn;3. 物理保存到硬盘
+        // 将文件从内存复制交换到服务器硬盘
         Path targetLocation = Paths.get(uploadPath).resolve(savedName);
         Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-        // learn;4. 保存记录到数据库
+        // 组装并返回数据库实体
         JobFile jobFile = new JobFile();
         jobFile.setOriginalFileName(originalName);
         jobFile.setSavedFileName(savedName);
@@ -57,40 +60,41 @@ public class FileServiceImpl implements FileService {
         return fileRepository.save(jobFile);
     }
 
+    @Override
     public List<JobFile> getFilesByJobId(Integer jobId) {
         Integer currentUserId = securityUtils.getCurrentUserId();
 
-        // learn;1. 先查出这个 Job
         Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("任务不存在"));
+                .orElseThrow(() -> new RuntimeException("事项不存在"));
 
-        // learn;2. 校验这个 Job 是不是当前用户的
+        // 水平越权安全防御：禁止用户通过拼装 jobId 查看属于其他用户的附件
         if (!job.getUserId().equals(currentUserId)) {
-            throw new RuntimeException("你没有权限查看该任务的附件");
+            throw new RuntimeException("你没有权限查看该事项的附件");
         }
         return fileRepository.findByJobId(jobId);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class) // 显式指明任何异常均触发事务回滚
     public void deleteFileById(Integer id) {
-        // learn;1. 从数据库中查询文件是否存在
+
         JobFile jobFile = fileRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("该文件在数据库中不存在，无法删除"));
-
+// 水平越权防御：只能删除自己上传的文件
         Integer currentUserId = securityUtils.getCurrentUserId();
         if (!jobFile.getJob().getUserId().equals(currentUserId)) {
             throw new RuntimeException("对不起，你没有权限删除该文件！"); // 会触发事务回滚
         }
 
-        // learn;2. 拼接该文件在磁盘上的绝对路径 (使用的是长UUID文件名)
+        // 定位该文件在磁盘上的绝对路径 (使用的是长UUID文件名)
         java.nio.file.Path filePath = java.nio.file.Paths.get(uploadPath, jobFile.getSavedFileName());
 
         try {
+            // 先尝试删除物理文件
             java.nio.file.Files.deleteIfExists(filePath);
             System.out.println("磁盘物理文件删除成功：" + filePath.toString());
         } catch (java.io.IOException e) {
-            //learn; 物理删除失败时抛出异常，触发事务回滚，防止出现“磁盘没删掉，数据库却删了”的情况
+            //物理删除失败时抛出异常，触发事务回滚，防止产生死锁和数据不一致
             throw new RuntimeException("物理文件删除失败，停止清理数据库数据: " + e.getMessage());
         }
 
