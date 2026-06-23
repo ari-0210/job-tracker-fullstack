@@ -182,10 +182,13 @@ const handleNoteSave = async () => {
     ...jobDetail.value,
     notes: noteText.value,
   };
-
-  await jobStore.saveJob(finalData);
-
-  await jobStore.fetchJobs();
+  try {
+    await jobStore.saveJob(finalData);
+    jobDetail.value.notes = noteText.value;
+    await jobStore.fetchJobs();
+  } catch (error) {
+    console.error("保存备注或刷新大盘失败:", error);
+  }
 };
 
 const handlePreview = (file: any) => {
