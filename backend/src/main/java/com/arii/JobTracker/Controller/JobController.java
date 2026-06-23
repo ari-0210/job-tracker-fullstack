@@ -30,11 +30,11 @@ import java.util.Map;
  *
  * @author Ari
  */
-@Slf4j //learn;自动生成log
+@Slf4j 
 @Tag(name = "01.申请事项管理", description = "处理申请事项的增删改查及统计")
 @RestController
 @RequestMapping("/api/jobs")
-@Validated //learn;开启本类内零散参数的强校验
+@Validated 
 public class JobController {
 
 
@@ -63,8 +63,6 @@ public class JobController {
         return Result.success(vo);
     }
 
-    //learn;userId 通常不会作为 @RequestParam 让前端传过来。
-//learn;原因：如果让前端传 userId，用户可以随意把浏览器 URL 里的 userId=1 改成 userId=2，从而偷看别人的数据。
 
     /**
      * 分页多条件安全检索申请事项接口.
@@ -79,7 +77,7 @@ public class JobController {
     @GetMapping
     public Result<PageVO<JobVO>> getAllJobs(
             @RequestParam(name = "keyword", required = false) String keyword,
-            @Min(value = 0, message = "当前页码不能小于 0") // learn;强行拦截负数页
+            @Min(value = 0, message = "当前页码不能小于 0") 
             @RequestParam(name = "page", defaultValue = "0") int page,
             @Min(value = 1, message = "每页拉取条数不能小于 1")
             @Max(value = 100, message = "每页拉取条数不能超过 100")//防御性封顶，防止内存爆掉
@@ -87,13 +85,13 @@ public class JobController {
 
     ) {
         Integer userId = securityUtils.getCurrentUserId();
-        //learn;去数据库查出带有分页信息的 Entity 原始数据
+
         Page<Job> jobsPage = jobService.findAllJobs(userId, page, size, keyword);
 
-        //learn; 将内部的 List<Job> 转换成 List<JobVO>
+
         List<JobVO> voList = jobsPage.getContent().stream().map(job -> {
             JobVO vo = new JobVO();
-            BeanUtils.copyProperties(job, vo); // learn;这里是从数据库查出来的全量数据，可以直接覆盖拷贝
+            BeanUtils.copyProperties(job, vo); 
             return vo;
         }).toList();
 

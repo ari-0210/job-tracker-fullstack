@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // Learn:监听审计事件
+@EntityListeners(AuditingEntityListener.class) 
 @Table(name = "submissions", indexes = {
         @Index(name = "idx_user_id", columnList = "user_id"), // 1. 把原有的 user_id 索引写进来
         @Index(name = "idx_reminder_date", columnList = "reminder_date") // 2. 新增的提醒时间索引
@@ -41,24 +41,24 @@ public class Job {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    // Learn;创建时间：只在插入时设置，之后不可更改
+
     @CreatedDate
     @Column(name = "submit_date", updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate applyDate;
 
-    // Learn;修改时间：每次更新都会自动刷新
+
     @LastModifiedDate
     @Column(name = "update_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateDate;
 
-    //learn;ddl
+
     @Column(name = "deadline", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deadline;
 
-    //learn;ddl->提醒时间
+
     @Column(name = "reminder_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime reminderDate;

@@ -43,20 +43,20 @@ public class FileController {
     public Result<JobFile> uploadFile(@RequestParam("file") MultipartFile file,
                                       @RequestParam("jobId") Integer jobId) throws Exception {
 
-            // learn;1. 校验事项是否存在
-            Job job = jobRepository.findById(jobId)
+
+        Job job = jobRepository.findById(jobId)
                     .orElseThrow(() -> new RuntimeException("事项不存在"));
 if (file.getSize() > 10 * 1024 * 1024) { throw new RuntimeException("文件太大"); }
-// learn;2. 校验后缀名（只允许常见白名单）
+
         String originalName = file.getOriginalFilename();
  String ext = originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
 if (!Arrays.asList(".jpg", ".jpeg", ".png", ".pdf", ".docx", ".txt").contains(ext)) {
      throw new RuntimeException("非法文件格式");
  }
-            // learn;2. 调用 Service 保存文件
-            JobFile savedFile = fileService.storeFile(file, job);
 
-            // learn;3. 返回保存成功的实体（包含 ID、文件名等，方便前端展示）
+        JobFile savedFile = fileService.storeFile(file, job);
+
+
         return Result.success(savedFile);
     }
 

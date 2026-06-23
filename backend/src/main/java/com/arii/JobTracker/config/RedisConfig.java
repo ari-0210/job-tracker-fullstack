@@ -21,10 +21,10 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 
-        // learn;设置 JSON 序列化器（处理 Java 对象转 JSON）
+
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // learn;支持 Java 8 时间类型（LocalDateTime）
+
         om.registerModule(new JavaTimeModule());
         om.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
@@ -33,7 +33,7 @@ public class RedisConfig {
         );
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
 
-        // learn;Key 采用 String 序列化;Value 采用 JSON 序列化
+
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(serializer);
         template.setHashKeySerializer(new StringRedisSerializer());

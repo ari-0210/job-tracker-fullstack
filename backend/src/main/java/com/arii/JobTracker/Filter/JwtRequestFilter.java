@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -35,42 +37,42 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwt = null;
 
-        // learn;从 Authorization 头部提取 JWT (如果存在且以 "Bearer " 开头)
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7); // learn;去掉 "Bearer " 前缀
+            jwt = authorizationHeader.substring(7); 
             try {
                 username = jwtUtil.extractUsername(jwt);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                log.info("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                log.info("JWT Token has expired");
             }
         } else {
              logger.warn("JWT Token does not begin with Bearer String or is missing");
         }
 
-        //  learn;如成功提取到用户名，并且当前 SecurityContext 中还没有认证信息
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            //learn;验证 JWT 是否有效 (签名、未过期，并且用户名与 UserDetails 中的匹配)
+
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
-                //learn;如果 JWT 有效，手动创建一个 Spring Security 的 Authentication 对象
+
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // learn;将 Authentication 对象设置到 SecurityContext 中，表示当前用户已认证
+
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        chain.doFilter(request, response); //learn; 继续执行过滤器链中的下一个过滤器
+        chain.doFilter(request, response); 
     }
 
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // learn;使用 getServletPath() 更安全，能自适应各种路径配置
+
         String path = request.getServletPath();
 
         return path.startsWith("/doc.html")
@@ -78,7 +80,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 || path.startsWith("/swagger-resources")
                 || path.startsWith("/webjars")
                 || path.startsWith("/favicon.ico")
-                // learn; 极其重要：放行 Spring Boot 3 的错误路由，允许安全框架正确返回错误状态码
+
                 || path.startsWith("/error");
     }
 }

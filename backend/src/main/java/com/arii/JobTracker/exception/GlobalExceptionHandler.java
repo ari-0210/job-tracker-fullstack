@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     public Result<Void> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error("数据校验未通过: ", ex);
 
-        // learn;抓取具体是哪个字段没过
+
         FieldError fieldError = ex.getBindingResult().getFieldError();
         String errorMsg = fieldError != null ? fieldError.getDefaultMessage() : "参数校验未通过";
 

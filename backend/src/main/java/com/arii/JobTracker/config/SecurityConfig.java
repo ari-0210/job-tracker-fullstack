@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity // learn;启用 Spring Security 的 Web 安全功能
+@EnableWebSecurity 
 @EnableMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig {
@@ -26,36 +26,35 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter; //  learn;JWT 请求过滤器
+    private JwtRequestFilter jwtRequestFilter; 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // learn;用 AuthenticationManager Bean，AuthController 进行用户凭证的显式认证
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
 
-    // learn;定义 SecurityFilterChain Bean 配置安全规则
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // learn;禁用 CSRF (因为JWT通常无状态，CSRF 保护依赖于 session)
+
                 .csrf(csrf -> csrf.disable())
 
-                // learn;配置 CORS
+
                 .cors(withDefaults())
 
-                // learn;将 Session 管理配置为无状态 (STATELESS)
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // learn;配置 HTTP 请求的授权规则
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
@@ -74,7 +73,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
 
-                // learn;自定义 JWT 请求过滤器添加到过滤器链中
+
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

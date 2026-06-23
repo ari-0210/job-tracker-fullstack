@@ -24,16 +24,15 @@ public class User implements UserDetails {
     private String username;
 
     @Column(nullable = false)
-    private String password; // learn;存储哈希后的密码
+    private String password; 
 
     private String roles = UserRole.USER.name();
-    private boolean enabled = true; // learn;用户是否启用
+    private boolean enabled = true;
 
-    // learn;实现 UserDetails 接口要求的方法
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // learn;将 roles 字符串转为权限列表
+
         return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
     }
 

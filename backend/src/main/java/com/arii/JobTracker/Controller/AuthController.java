@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
     public class AuthController {
 
         @Autowired
-        private AuthenticationManager authenticationManager; // learn:用于实际的认证处理
+        private AuthenticationManager authenticationManager; 
 
         @Autowired
         private JwtUtil jwtUtil;
@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
         private UserDetailsService userDetailsService;
 
         @Autowired
-        private UserService userService; // learn;注入新的 UserService
+        private UserService userService; 
 
     /**
      * 开放式新用户注册接口.
@@ -58,7 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
     public Result<String> registerUser(@RequestBody UserCreateRequestDto userCreateRequest) {
 
                 User registeredUser = userService.createUser(userCreateRequest);
-        // learn;注册成功，可以返回成功信息，新创建的用户信息,去掉try- catch
+
         return Result.success("User registered successfully! Username: " + registeredUser.getUsername());
 
         }
@@ -86,13 +86,13 @@ import org.springframework.web.bind.annotation.RestController;
                 return Result.failed(ResultCode.UNAUTHORIZED.getCode(), "用户名或密码错误");
             }
 
-        // learn:加载 UserDetails ，获取生成 JWT 所需的信息 (通常是用户名)
-            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        // learn;生成 JWT
-            final String jwt = jwtUtil.generateToken(userDetails);// 或者 jwtUtil.generateToken(userDetails)
+        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        // learn;返回 JWT 给前端
+
+        final String jwt = jwtUtil.generateToken(userDetails);// 或者 jwtUtil.generateToken(userDetails)
+
+
         return Result.success(new LoginResponse(jwt, userDetails.getUsername()));
         }
     }

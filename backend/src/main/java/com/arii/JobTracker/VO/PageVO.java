@@ -24,7 +24,7 @@ public class PageVO<T> {
     @Schema(description = "数据列表")
     private List<T> content;
 
-    // learn;构造函数，直接将 Spring Data 的 Page 转换过来
+
     public <E> PageVO(org.springframework.data.domain.Page<E> page, List<T> content) {
         this.totalElements = page.getTotalElements();
         this.totalPages = page.getTotalPages();

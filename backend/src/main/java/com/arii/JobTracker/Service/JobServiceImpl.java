@@ -6,6 +6,7 @@ import com.arii.JobTracker.Repository.JobRepository;
 import com.arii.JobTracker.Security.BeanCopyUtils;
 import com.arii.JobTracker.Security.SecurityUtils;
 import com.arii.JobTracker.pojo.Job;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  * 申请事项业务逻辑处理核心实现类.
  * <p>注：方法实现由于自动继承 Service 接口的标准大厂 JavaDoc 规约，在此处无需二次冗余堆砌。</p>
  */
+@Slf4j
 @Service
 public class JobServiceImpl implements JobService {
     @Autowired
@@ -52,13 +54,13 @@ public class JobServiceImpl implements JobService {
         return savedJob;
     }
 
-    // learn;查
+
     @Override
     public Page<Job> findAllJobs(Integer userId, int pageNumber, int pageSize, String searchTerm) {
         // 固化核心规则：全系统数据默认按最新更新时间（updateDate）由近及远呈现
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("updateDate").descending());
         // 智能安全提取：判定是否需要执行跨库联合模糊匹配检索
-        if (StringUtils.hasText(searchTerm)) { // learn;用StringUtils 检查关键字是否为空
+        if (StringUtils.hasText(searchTerm)) { 
             return jobRepository.findByUserIdAndCompanyContainingIgnoreCaseOrUserIdAndTagsContainingIgnoreCase(
                     userId, searchTerm, userId, searchTerm, pageable
             );
@@ -68,7 +70,7 @@ public class JobServiceImpl implements JobService {
 
     }
 
-    // learn;改
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Job updateJob(Integer userId, Integer jobId, JobDTO dto) {
@@ -91,11 +93,11 @@ public class JobServiceImpl implements JobService {
         return saveJob;
     }
 
-    // learn;删
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteJob(Integer userId, Integer jobId) {
-        // learn;不仅仅通过 id 删，还要确认这个 id 确实属于这个 userId
+
         Job job = jobRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("找不到该记录"));
 
@@ -128,7 +130,7 @@ public class JobServiceImpl implements JobService {
             return cached;
         }
 
-        // learn;2. 缓存未命中，执行之前的数据库查询逻辑
+
         StatisticsDTO dbData = calculateFromDb(userId);
 
         //写入 Redis 内存基线，强制配置 30 分钟生命周期（TTL），
@@ -145,7 +147,7 @@ public class JobServiceImpl implements JobService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime sevenDaysLater = now.plusDays(7);
 
-        // learn;本月截止：从现在起到本月最后一天 23:59:59
+
         LocalDateTime endOfMonth = now.with(TemporalAdjusters.lastDayOfMonth())
                 .withHour(23).withMinute(59).withSecond(59);
         long total = jobRepository.countByUserId(userId);
@@ -153,7 +155,7 @@ public class JobServiceImpl implements JobService {
 
         Map<String, Long> statusMap = new HashMap<>();
         for (Object[] result : results) {
-            // learn;result[0] 是 status (String/Enum), result[1] 是 count (Long)
+
             statusMap.put(result[0].toString(), (Long) result[1]);
         }
         long next7 = jobRepository.countByDeadlineRange(userId, now, sevenDaysLater);
@@ -161,7 +163,7 @@ public class JobServiceImpl implements JobService {
         return new StatisticsDTO(total, statusMap, next7, thisMonth);
     }
 
-    //learn;获取紧急事项
+
     @Override
     public List<Job> getUrgentJobs(Integer userId) {
         LocalDateTime now = LocalDateTime.now();

@@ -6,6 +6,7 @@ import com.arii.JobTracker.Repository.JobRepository;
 import com.arii.JobTracker.Security.SecurityUtils;
 import com.arii.JobTracker.pojo.Job;
 import com.arii.JobTracker.pojo.JobFile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
     @Autowired
@@ -31,14 +33,14 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private JobRepository jobRepository;
 
-    @Value("${file.upload-path}") // learn;从配置文件读取存放路径
+    @Value("${file.upload-path}") 
     private String uploadPath;
 
     private static final List<String> ALLOWED_EXTENSIONS = List.of(".jpg", ".jpeg", ".png", ".pdf", ".docx", ".zip");
     @Override
     public JobFile storeFile(MultipartFile file, Job job) throws IOException {
 
-        // learn; 提取后缀并强行转为小写比对
+
         String originalName = file.getOriginalFilename();
         if (originalName == null || !originalName.contains(".")) {
             throw new RuntimeException("非法文件名，拒绝上传！");
@@ -104,13 +106,13 @@ public class FileServiceImpl implements FileService {
         try {
             // 先尝试删除物理文件
             java.nio.file.Files.deleteIfExists(filePath);
-            System.out.println("磁盘物理文件删除成功：" + filePath.toString());
+            log.info("磁盘物理文件删除成功：" + filePath.toString());
         } catch (java.io.IOException e) {
             //物理删除失败时抛出异常，触发事务回滚，防止产生死锁和数据不一致
             throw new RuntimeException("物理文件删除失败，停止清理数据库数据: " + e.getMessage());
         }
 
         fileRepository.delete(jobFile);
-        System.out.println("数据库记录删除成功，文件ID: " + id);
+        log.info("数据库记录删除成功，文件ID: " + id);
     }
 }
