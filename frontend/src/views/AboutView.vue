@@ -2,7 +2,7 @@
   <div class="max-w-4xl mx-auto p-6">
     <n-card title="DeadlineTracker" size="huge" class="rounded-3xl shadow-lg">
       <div class="space-y-6 text-gray-600">
-        <p class="text-lg">这是一个进度管理工具，旨在帮助更高效的完成计划。</p>
+        <p class="text-lg">这是一款进度管理工具，旨在帮助更高效的完成计划。</p>
 
         <n-divider title-placement="left">技术架构</n-divider>
         <div class="grid grid-cols-2 gap-4">

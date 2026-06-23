@@ -30,7 +30,7 @@
 
           <n-card title="附件中心" size="small">
             <n-upload
-              action="/api/files/upload"
+              action="/api/files/uploads"
               :data="{ jobId: props.jobId }"
               :show-file-list="false"
               :headers="uploadHeaders"
