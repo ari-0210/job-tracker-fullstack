@@ -1,10 +1,10 @@
 export interface Result<T> {
   code: number;
-  msg: string;
+  message: string;
   data: T; // learn;T 是泛型，代表具体的数据内容
 }
 
-//learn;申请类型
+/** 进度状态类型 */
 export type JobStatus =
   | "DRAFT"
   | "APPLIED"
@@ -13,21 +13,47 @@ export type JobStatus =
   | "REJECTED";
 
 export interface Job {
+  /** 事项唯一自增主键（新建时前端没有，后端落库后自动生成） */
   id?: number; // learn;问号表示可选（新建時沒有 ID，後端返回才有）
-  company: string; // learn;接收方
+  /** 目标接收方（如：公司名称/招聘单位） */
+  company: string;
+  /** 事项标题或职位（如：完成报告） */
   title: string; // learn;标题
-  status: JobStatus; // learn;进度
+  /** 当前事项的生命周期状态/进度（DRAFT \| APPLIED 等） */
+  status: JobStatus;
+  /** 用户设置的提醒通知日期（ISO字符串或未设置时为 null）,可选 */
   reminderDate: string | null; // learn;提醒日期,可选（ISO 字符串或 null）
+  /** 事项截止的绝对时间红线 */
   deadline: string; // learn;死线日期
+  /** 归属的多维标签（如：工作、生活，多个标签可用逗号隔开） */
   tags?: string; // learn;标签
-  applyDate?: string; // learn;创建时间
-  updateDate?: string; // learn;更新时间
-  notes?: string; //learn;备注
+  /** 创建时间 */
+  applyDate?: string;
+  /** 最新一次更新时间 */
+  updateDate?: string;
+  /** 备注,如:购物清单内容 */
+  notes?: string;
 }
 
 export interface JobQueryParams {
-  status?: JobStatus; //learn; 状态筛选
-  keyword?: string; // learn;关键字
-  page?: number; // learn;当前页码
-  size?: number; // learn;当前页数
+  /** 状态筛选 */
+  status?: JobStatus;
+  /** 查询关键字 */
+  keyword?: string;
+  /** 当前页码 */
+  page?: number;
+  /** 当前页数 */
+  size?: number;
+}
+export interface SpringPage<T> {
+  /**承载Job[] 数组 */
+  content: T[]; //
+  /**后端物理总条数 */
+  totalElements: number;
+  /** 总页数 */
+  totalPages: number;
+  /** 每页条数 */
+  size: number;
+  /** 当前页码 */
+  number: number;
 }

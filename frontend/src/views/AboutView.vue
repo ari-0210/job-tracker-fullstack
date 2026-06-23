@@ -16,9 +16,9 @@
 
         <n-divider title-placement="left">核心功能</n-divider>
         <n-list>
-          <n-list-item>🔥 实时可视化看板：一眼掌握投递进度</n-list-item>
-          <n-list-item>⚡ Redis 高性能缓存：Dashboard 秒级响应</n-list-item>
-          <n-list-item>📅 紧迫事项提醒：拒绝错过任何一个 DDL</n-list-item>
+          <n-list-item>▷ 实时可视化看板：一眼掌握投递进度</n-list-item>
+          <n-list-item>▷ Redis 高性能缓存：Dashboard 秒级响应</n-list-item>
+          <n-list-item>▷ 紧迫事项提醒：不错过任何一个 DDL</n-list-item>
         </n-list>
 
         <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-sm">

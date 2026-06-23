@@ -38,8 +38,10 @@
           {{ errorMessage }}
         </n-alert>
       </n-form>
-      <n-divider> Don't have an account? </n-divider>
-      <n-button block @click="openRegisterModal"> Create an Account </n-button>
+      <n-divider> Don't have an account?(没有账号?) </n-divider>
+      <n-button block @click="openRegisterModal">
+        Create an Account(创建账号)
+      </n-button>
     </n-card>
     <n-modal v-model:show="showRegisterModal">
       <n-card
@@ -145,16 +147,8 @@ const handleRegister = async () => {
     showRegisterModal.value = false;
   } catch (error) {
     console.error("Registration failed:", error);
-    if (
-      error.response &&
-      error.response.data &&
-      (error.response.data.error || error.response.data.message)
-    ) {
-      registerError.value =
-        error.response.data.error || error.response.data.message;
-    } else {
-      registerError.value = "An unknown error occurred.";
-    }
+    registerError.value =
+      error.response?.data?.message || "An unknown error occurred.";
   } finally {
     isRegistering.value = false;
   }
@@ -176,7 +170,7 @@ const handleLogin = async () => {
       password: password.value,
     });
 
-    const token = response.data.token;
+    const token = response.data.data.token;
 
     if (token) {
       console.log(
@@ -192,13 +186,10 @@ const handleLogin = async () => {
     }
   } catch (error) {
     console.error("Login failed:", error);
-    if (error.response && error.response.data) {
-      // learn;假设后端错误响应体是 { message: "错误信息" } 或直接是字符串
+    if (error.response) {
       errorMessage.value =
-        typeof error.response.data === "string"
-          ? error.response.data
-          : error.response.data.message ||
-            "Invalid credentials or server error.";
+        error.response.data?.message ||
+        "Invalid credentials or server error(用户名或密码错误).";
     } else if (error.request) {
       errorMessage.value =
         "No response from server. Please check your network.";
@@ -210,8 +201,8 @@ const handleLogin = async () => {
   }
 };
 
+/** 重置表单 */
 const openRegisterModal = () => {
-  // learn;重置表单
   registerError.value = "";
   newUser.value = {
     username: "",

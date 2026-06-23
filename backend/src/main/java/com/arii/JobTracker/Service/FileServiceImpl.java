@@ -34,15 +34,27 @@ public class FileServiceImpl implements FileService {
     @Value("${file.upload-path}") // learn;从配置文件读取存放路径
     private String uploadPath;
 
+    private static final List<String> ALLOWED_EXTENSIONS = List.of(".jpg", ".jpeg", ".png", ".pdf", ".docx", ".zip");
     @Override
     public JobFile storeFile(MultipartFile file, Job job) throws IOException {
+
+        // learn; 提取后缀并强行转为小写比对
+        String originalName = file.getOriginalFilename();
+        if (originalName == null || !originalName.contains(".")) {
+            throw new RuntimeException("非法文件名，拒绝上传！");
+        }
+        String extension = originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
+
+        // 强行阻断黑客投毒：不在白名单内的后缀（如 .sh, .exe, .jsp）直接熔断
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            throw new RuntimeException("不支持的文件格式！仅允许上传图片、PDF、Word及压缩包");
+        }
+
         // 自动探测并防御性创建缺失的本地存储目录
         File directory = new File(uploadPath);
         if (!directory.exists()) directory.mkdirs();
 
-        // 提取扩展名，利用全局唯一 UUID 重命名，切断公网恶意重名覆盖的可能
-        String originalName = file.getOriginalFilename();
-        String extension = originalName.substring(originalName.lastIndexOf("."));
+        // 提取扩展名后，利用全局唯一 UUID 重命名，切断公网恶意重名覆盖的可能
         String savedName = UUID.randomUUID().toString() + extension;
 
         // 将文件从内存复制交换到服务器硬盘
@@ -83,7 +95,7 @@ public class FileServiceImpl implements FileService {
 // 水平越权防御：只能删除自己上传的文件
         Integer currentUserId = securityUtils.getCurrentUserId();
         if (!jobFile.getJob().getUserId().equals(currentUserId)) {
-            throw new RuntimeException("对不起，你没有权限删除该文件！"); // 会触发事务回滚
+            throw new RuntimeException("对不起，你没有权限删除该文件！");
         }
 
         // 定位该文件在磁盘上的绝对路径 (使用的是长UUID文件名)

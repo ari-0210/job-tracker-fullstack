@@ -59,6 +59,12 @@
             placeholder="Input tags(请输入标签)"
           />
         </n-form-item>
+        <n-form-item label="notes(备注)">
+          <n-input
+            v-model:value="formModel.notes"
+            placeholder="Input notes(请输入备注)"
+          />
+        </n-form-item>
       </n-form>
       <template #footer>
         <n-space justify="end">

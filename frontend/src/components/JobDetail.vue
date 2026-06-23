@@ -22,10 +22,9 @@
             <n-input
               v-model:value="noteText"
               type="textarea"
-              placeholder="点击添加备注（回车或点击空白处保存）..."
+              placeholder="点击添加备注（回车保存）..."
               :autosize="{ minRows: 2, maxRows: 6 }"
               @keyup.enter="handleNoteSave"
-              @blur="handleNoteSave"
             />
           </n-card>
 
@@ -136,14 +135,17 @@ watch(
     if (newId && isShow) {
       loading.value = true;
       try {
-        jobDetail.value = jobStore.jobs.find((j) => j.id === newId);
+        // learn; 核心修改：死死掐断浅拷贝引用，解构出一个全新的独立对象
+        const originalJob = jobStore.jobs.find((j) => j.id === newId);
+        jobDetail.value = originalJob ? { ...originalJob } : null;
+
         // learn;稍微延迟 50ms，避开浏览器打开抽屉时的 UI 渲染高峰
         await new Promise((resolve) => setTimeout(resolve, 50));
         console.log("准备请求文件列表, ID:", newId);
         //learn; 获取该任务的文件列表
         const res = await FileApi.getFileByID(Number(newId));
         console.log("文件列表返回内容:", res);
-        fileList.value = res.data || [];
+        fileList.value = res.data.data || [];
       } catch (error: any) {
         console.error(
           "加载文件失败，错误详情:",
@@ -183,7 +185,7 @@ const handleNoteSave = async () => {
 
   await jobStore.saveJob(finalData);
 
-  jobDetail.value.notes = noteText.value;
+  await jobStore.fetchJobs();
 };
 
 const handlePreview = (file: any) => {

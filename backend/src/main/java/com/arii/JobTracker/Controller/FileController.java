@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * @author Ari
  */
 @Slf4j
-@Tag(name = "03.上传文件", description = "事项上传文件附件")
+@Tag(name = "03.上传文件管理", description = "事项上传文件附件")
 @RestController
 @RequestMapping("/api/files")
 public class FileController {
@@ -28,7 +29,7 @@ public class FileController {
     private FileService fileService;
 
     @Autowired
-    private JobRepository jobRepository; // learn;用来校验 jobId 是否存在
+    private JobRepository jobRepository;
 
     /**
      * 上传单文件附件并关联至指定申请事项.
@@ -42,10 +43,16 @@ public class FileController {
     public Result<JobFile> uploadFile(@RequestParam("file") MultipartFile file,
                                       @RequestParam("jobId") Integer jobId) throws Exception {
 
-            // learn;1. 校验任务是否存在
+            // learn;1. 校验事项是否存在
             Job job = jobRepository.findById(jobId)
-                    .orElseThrow(() -> new RuntimeException("任务不存在"));
-
+                    .orElseThrow(() -> new RuntimeException("事项不存在"));
+if (file.getSize() > 10 * 1024 * 1024) { throw new RuntimeException("文件太大"); }
+// learn;2. 校验后缀名（只允许常见白名单）
+        String originalName = file.getOriginalFilename();
+ String ext = originalName.substring(originalName.lastIndexOf(".")).toLowerCase();
+if (!Arrays.asList(".jpg", ".jpeg", ".png", ".pdf", ".docx", ".txt").contains(ext)) {
+     throw new RuntimeException("非法文件格式");
+ }
             // learn;2. 调用 Service 保存文件
             JobFile savedFile = fileService.storeFile(file, job);
 

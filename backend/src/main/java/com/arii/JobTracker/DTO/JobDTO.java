@@ -12,7 +12,7 @@ public class JobDTO {
     @Schema(description = "接收方", example = "投递公司名")
     private String company;
 
-    @Schema(description = "状态")
+
     @NotNull(message = "状态不能为空")
     private String status;
 

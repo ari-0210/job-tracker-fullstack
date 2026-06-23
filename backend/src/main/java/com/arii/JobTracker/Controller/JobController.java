@@ -12,10 +12,13 @@ import com.arii.JobTracker.pojo.Job;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +34,7 @@ import java.util.Map;
 @Tag(name = "01.申请事项管理", description = "处理申请事项的增删改查及统计")
 @RestController
 @RequestMapping("/api/jobs")
+@Validated //learn;开启本类内零散参数的强校验
 public class JobController {
 
 
@@ -75,7 +79,10 @@ public class JobController {
     @GetMapping
     public Result<PageVO<JobVO>> getAllJobs(
             @RequestParam(name = "keyword", required = false) String keyword,
+            @Min(value = 0, message = "当前页码不能小于 0") // learn;强行拦截负数页
             @RequestParam(name = "page", defaultValue = "0") int page,
+            @Min(value = 1, message = "每页拉取条数不能小于 1")
+            @Max(value = 100, message = "每页拉取条数不能超过 100")//防御性封顶，防止内存爆掉
             @RequestParam(name = "size", defaultValue = "10") int size
 
     ) {
