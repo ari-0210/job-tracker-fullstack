@@ -78,7 +78,11 @@
         </tr>
       </tbody>
     </n-table>
-    <JobDetail v-model:show="showDrawer" :job-id="selectedJobId" />
+    <JobDetail
+      v-model:show="showDrawer"
+      :job-id="selectedJobId"
+      @open-edit-form="handleParentOpenEditForm"
+    />
     <JobPagination />
   </div>
 </template>
@@ -113,6 +117,14 @@ const handleOpenDetail = (id: number | undefined) => {
   if (id === undefined) return;
   selectedJobId.value = id;
   showDrawer.value = true; //learn; 打开侧边栏
+};
+/**
+ * 唤醒侧边栏Drawer并下发目标行唯一主键.
+ * @param {number } editId - 传入的 Job 主键自增 ID
+ */
+const handleParentOpenEditForm = (editId: number) => {
+  const targetJob = jobStore.jobs.find((j) => j.id === Number(editId));
+  jobStore.openForm("edit", targetJob);
 };
 
 // ==========================================
