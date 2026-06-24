@@ -19,13 +19,18 @@
           </n-descriptions>
 
           <n-card title="备注" size="small">
-            <n-input
-              v-model:value="noteText"
-              type="textarea"
-              placeholder="点击添加备注（回车保存）..."
-              :autosize="{ minRows: 2, maxRows: 6 }"
-              @keyup.enter="handleNoteSave"
-            />
+            <button
+              @click="handleGoToEdit"
+              class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+            >
+              ✏️ 弹出编辑
+            </button>
+
+            <p
+              class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed"
+            >
+              {{ jobDetail?.notes || "暂无备注信息" }}
+            </p>
           </n-card>
 
           <n-card title="附件中心" size="small">
@@ -93,6 +98,7 @@
 import { ref, watch } from "vue";
 import { getStatusType } from "@/constants/job";
 import { useJobStore } from "@/stores/job";
+
 import {
   CloudUploadOutline,
   DocumentTextOutline,
@@ -120,10 +126,19 @@ const props = defineProps<{
   show: boolean;
 }>();
 
-const emit = defineEmits(["update:show"]);
+const emit = defineEmits(["update:show", "open-edit-form"]);
+
+const handleGoToEdit = () => {
+  if (!props.jobId) return;
+  // 通知父组件：把详情页关掉和打开JobForm弹窗
+  emit("update:show", false);
+  emit("open-edit-form", props.jobId);
+};
+
 const jobStore = useJobStore();
 
 const jobDetail = ref<any>(null);
+const noteText = ref("");
 const fileList = ref<any[]>([]);
 const loading = ref(false);
 
@@ -135,9 +150,10 @@ watch(
     if (newId && isShow) {
       loading.value = true;
       try {
-        // learn; 核心修改：死死掐断浅拷贝引用，解构出一个全新的独立对象
+        // learn; 捞出原始数据只用于详情页的只读展示
         const originalJob = jobStore.jobs.find((j) => j.id === newId);
-        jobDetail.value = originalJob ? { ...originalJob } : null;
+        jobDetail.value = originalJob;
+        noteText.value = originalJob?.notes || "";
 
         // learn;稍微延迟 50ms，避开浏览器打开抽屉时的 UI 渲染高峰
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -161,35 +177,6 @@ watch(
   },
   { immediate: true },
 );
-
-//learn;备注
-
-const noteText = ref("");
-
-// learn;切换任务时，把当前备注同步给输入框
-watch(
-  () => jobDetail.value?.notes,
-  (newNotes) => {
-    noteText.value = newNotes || "";
-  },
-  { immediate: true },
-);
-
-const handleNoteSave = async () => {
-  if (!jobDetail.value) return;
-
-  const finalData = {
-    ...jobDetail.value,
-    notes: noteText.value,
-  };
-  try {
-    await jobStore.saveJob(finalData);
-    jobDetail.value.notes = noteText.value;
-    await jobStore.fetchJobs();
-  } catch (error) {
-    console.error("保存备注或刷新大盘失败:", error);
-  }
-};
 
 const handlePreview = (file: any) => {
   if (!file.savedFileName) return;

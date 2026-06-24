@@ -39,7 +39,7 @@ public class FileController {
      * @return 包含唯一UUID文件名及存储元数据的 Result 外壳
      * @throws Exception 当指定任务不存在，或物理磁盘写入故障时抛出，由全局异常处理器拦截
      */
-    @PostMapping("/upload")
+    @PostMapping("/uploads")
     public Result<JobFile> uploadFile(@RequestParam("file") MultipartFile file,
                                       @RequestParam("jobId") Integer jobId) throws Exception {
 
