@@ -1,5 +1,6 @@
 import apiClient from "./client";
 import type { Result } from "@/types/job";
+import type { JobFile } from "@/types/file";
 /**
  * 事项关联物理附件生命周期客户端代理对象.
  * @author Ari
