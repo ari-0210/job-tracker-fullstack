@@ -111,7 +111,7 @@ import { useAuthStore } from "@/stores/auth";
 
 const authStore = useAuthStore();
 
-// learn;手动上传请求头
+
 const uploadHeaders = {
   Authorization: `Bearer ${authStore.token}`,
 };
@@ -120,7 +120,7 @@ const handleUploadError = () => {
   window.$message?.error("上传失败，请检查网络或登录状态");
 };
 
-// learn;接收父组件传来的 props
+
 const props = defineProps<{
   jobId: number | null;
   show: boolean;
@@ -142,7 +142,7 @@ const noteText = ref("");
 const fileList = ref<any[]>([]);
 const loading = ref(false);
 
-// learn;监听 ID 变化，一旦打开就去后端抓取完整信息和文件列表
+
 watch(
   () => [props.jobId, props.show],
   async ([newId, isShow]) => {
@@ -150,17 +150,17 @@ watch(
     if (newId && isShow) {
       loading.value = true;
       try {
-        // learn; 捞出原始数据只用于详情页的只读展示
+        
         const originalJob = jobStore.jobs.find((j) => j.id === newId);
         jobDetail.value = originalJob;
         noteText.value = originalJob?.notes || "";
 
-        // learn;稍微延迟 50ms，避开浏览器打开抽屉时的 UI 渲染高峰
+        
         await new Promise((resolve) => setTimeout(resolve, 50));
-        console.log("准备请求文件列表, ID:", newId);
-        //learn; 获取该任务的文件列表
+        
+        
         const res = await FileApi.getFileByID(Number(newId));
-        console.log("文件列表返回内容:", res);
+        
         fileList.value = res.data.data || [];
       } catch (error: any) {
         console.error(
@@ -169,7 +169,7 @@ watch(
           error.message,
           error.code,
         );
-        fileList.value = []; // learn;失败时清空列表，防止显示旧数据
+        fileList.value = []; 
       } finally {
         loading.value = false;
       }
@@ -181,16 +181,16 @@ watch(
 const handlePreview = (file: any) => {
   if (!file.savedFileName) return;
   const fileUrl = `/uploads/${file.savedFileName}`;
-  // learn;告诉浏览器这是一个新窗口打开，浏览器会根据文件类型决定预览还是下载
+  
   window.open(fileUrl, "_blank");
 };
 
-//learn;删除文件
+
 const deleteFile = async (id: number) => {
   try {
     await FileApi.deleteFile(id);
     window.$message?.success("文件删除成功");
-    console.log(`文件 ID: ${id} 已成功从视图中移除`);
+    
   } catch (error: any) {
     console.error("删除文件失败:", error);
     window.$message?.error("文件删除失败，请稍后重试");
@@ -198,7 +198,7 @@ const deleteFile = async (id: number) => {
 };
 
 const handleDownload = (file: any) => {
-  console.log("准备下载的文件对象:", file);
+  
 
   if (!file || !file.savedFileName) {
     console.error("属性缺失！", file);
@@ -206,23 +206,23 @@ const handleDownload = (file: any) => {
     return;
   }
 
-  // learn; 获取后缀名（防止被浏览器默认改成 .json）
+  
   const fileName = file.originalFileName || "download";
 
   const fileUrl = `/uploads/${file.savedFileName}`;
 
-  // learn;创建一个隐藏的 a 标签来触发下载，这样可以自定义下载的文件名
+  
   const link = document.createElement("a");
   link.href = fileUrl;
-  link.setAttribute("download", fileName); // learn;设置下载后的文件名
+  link.setAttribute("download", fileName); 
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
 
-// learn;上传成功的回调
+
 const handleFinish = ({ event }: { event?: ProgressEvent }) => {
-  // learn;这里的 event 内容通常是后端返回的 JobFile 对象
+  
   const target = event?.target as XMLHttpRequest;
   if (target.status === 200 || target.status === 201) {
     const savedFile = JSON.parse(target.response);

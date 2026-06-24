@@ -37,7 +37,7 @@ export const useStatsStore = defineStore("stats", () => {
     }
   };
   /** 承载当前在线用户迫近截止红线的前 5 条高危急迫事项数据集(安全防御空数组初始化) */
-  const urgentJobs = ref<Job[]>([]); // learn;存储紧迫事项列表
+  const urgentJobs = ref<Job[]>([]); 
   /**
    * 极速捕获并流转当前用户最高危的紧急代办事项集锦.
    * <p>交互闭环：数据拉取成功后就地执行状态覆写，实时驱动首页急迫看板进行极速视图刷新。</p>

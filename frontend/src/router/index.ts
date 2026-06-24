@@ -52,7 +52,7 @@ const router = createRouter({
  * @returns {RouteLocationRaw | void} 返回重定向目标或直接放行
  */
 router.beforeEach((to) => {
-  // learn;用pinia
+  
   const authStore = useAuthStore();
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return { name: "Login" };

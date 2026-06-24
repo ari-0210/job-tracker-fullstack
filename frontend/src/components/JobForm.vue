@@ -97,13 +97,13 @@ const emit = defineEmits<{
   (e: "save", data: Job): void;
 }>();
 
-// learn;当弹窗打开时，根据 initialData 初始化表单
+
 watch(
   () => props.show,
   (isShowing) => {
     if (isShowing) {
       if (props.mode === "edit" && props.initialData) {
-        formModel.value = { ...props.initialData }; // learn;编辑模式：克隆
+        formModel.value = { ...props.initialData }; 
       } else {
         resetForm();
       }

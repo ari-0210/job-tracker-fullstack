@@ -38,11 +38,11 @@ apiClient.interceptors.request.use(
  * <p>双向捕获后端安全防线抛回的 401(未认证) 与 403(越权/禁止访问) 状态码。</p>
  * <p>一旦引爆安全红线，就地就地执行前端无状态数据自清洗(logout)，并强制实施无感路由重定向弹回登录视窗。</p>
  */
-//learn;虽然在 Pinia 里设置了 defaults.headers，但如果 Token 过期了（后端返回 401），前端应该自动登出。
+
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.data && response.data.code && response.data.code !== 200) {
-      // learn; 使用 Naive UI 的独立全局弹窗机制（或者前端原生 window.alert 兜底）
+      
       if (window.$message) {
         window.$message.error(response.data.message || "未知业务矩阵崩溃");
       } else {

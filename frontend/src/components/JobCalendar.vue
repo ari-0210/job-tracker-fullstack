@@ -57,7 +57,7 @@ const calendarOptions = reactive<CalendarOptions>({
     }
   },
   eventClick: handleEventClick,
-  locale: "zh-cn", // learn;设置中文
+  locale: "zh-cn", 
   headerToolbar: {
     left: "prev,next today",
     center: "title",
@@ -66,7 +66,7 @@ const calendarOptions = reactive<CalendarOptions>({
 });
 
 onMounted(async () => {
-  // learn;只有当 store 里没数据时才去后端抓，避免重复请求
+  
   if (jobStore.jobs.length === 0) {
     await jobStore.fetchJobs();
   }

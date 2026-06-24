@@ -47,7 +47,7 @@ const menuOptions: MenuOption[] = [
     key: "about",
   },
 ];
-// learn;登出逻辑
+
 const logout = () => {
   authStore.logout();
   router.push({ name: "Login" });

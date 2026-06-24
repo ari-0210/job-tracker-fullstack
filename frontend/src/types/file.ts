@@ -20,6 +20,6 @@ export interface JobFile {
   /** 文件上传并落库的时间戳（格式：yyyy-MM-dd HH:mm:ss） */
   uploadTime?: string;
 
-  // learn;后端的私有属性 Job job 因为打了 @JsonIgnore，
-  // learn;绝对不会传到前端来，所以前端契约里完全不需要写 jobId 或 job 对象，保持纯净即可！
+  
+  
 }

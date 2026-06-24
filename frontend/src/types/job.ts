@@ -1,7 +1,7 @@
 export interface Result<T> {
   code: number;
   message: string;
-  data: T; // learn;T 是泛型，代表具体的数据内容
+  data: T; 
 }
 
 /** 进度状态类型 */
@@ -14,19 +14,19 @@ export type JobStatus =
 
 export interface Job {
   /** 事项唯一自增主键（新建时前端没有，后端落库后自动生成） */
-  id?: number; // learn;问号表示可选（新建時沒有 ID，後端返回才有）
+  id?: number; 
   /** 目标接收方（如：公司名称/招聘单位） */
   company: string;
   /** 事项标题或职位（如：完成报告） */
-  title: string; // learn;标题
+  title: string; 
   /** 当前事项的生命周期状态/进度（DRAFT \| APPLIED 等） */
   status: JobStatus;
   /** 用户设置的提醒通知日期（ISO字符串或未设置时为 null）,可选 */
-  reminderDate: string | null; // learn;提醒日期,可选（ISO 字符串或 null）
+  reminderDate: string | null; 
   /** 事项截止的绝对时间红线 */
-  deadline: string; // learn;死线日期
+  deadline: string; 
   /** 归属的多维标签（如：工作、生活，多个标签可用逗号隔开） */
-  tags?: string; // learn;标签
+  tags?: string; 
   /** 创建时间 */
   applyDate?: string;
   /** 最新一次更新时间 */

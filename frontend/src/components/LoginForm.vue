@@ -142,7 +142,7 @@ const handleRegister = async () => {
     };
     await registerUser(payload);
 
-    // learn;注册成功
+    
     alert("Registration successful! You can now log in.");
     showRegisterModal.value = false;
   } catch (error) {
@@ -162,7 +162,7 @@ const handleLogin = async () => {
   }
 
   isLoading.value = true;
-  errorMessage.value = ""; // learn;清除之前的错误信息
+  errorMessage.value = ""; 
 
   try {
     const response = await loginUser({
@@ -176,10 +176,10 @@ const handleLogin = async () => {
       console.log(
         "Login successful, token received. Setting token and attempting redirect...",
       );
-      //  learn;使用 pinia 处理存储和 Header
+      
       authStore.login(token);
 
-      // learn;跳转到受保护的页面
+      
       router.push({ name: "home" });
     } else {
       errorMessage.value = "Login successful, but no token received.";

@@ -99,14 +99,14 @@ const statsStore = useStatsStore();
 const jobStore = useJobStore();
 
 const chartOption = computed(() => {
-  // learn; 先准备好数据数组
+  
   const dataArray = Object.entries(statsStore.summary.statusCounts).map(
     ([key, count]) => {
       return { value: count, name: getStatusLabel(key) };
     },
   );
 
-  // learn; ECharts 配置
+  
   return {
     tooltip: { trigger: "item", formatter: "{b}: {c} ({d}%)" },
     legend: { bottom: "5%", left: "center" },
@@ -128,7 +128,7 @@ const router = useRouter();
 const handleJobClick = (job: Job) => {
   router.push({
     name: "home",
-    query: { editId: job.id }, // learn;携带想要编辑的任务 ID
+    query: { editId: job.id }, 
   });
 };
 onMounted(async () => {

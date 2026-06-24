@@ -25,7 +25,7 @@ export const useJobStore = defineStore("job", () => {
   /** 深度联动前端表单的复合型查询与分页控制参数结构体 */
   const queryParams = ref<JobQueryParams>({
     keyword: "",
-    page: 1, //learn; 前端视觉常识：从第 1 页开启计数
+    page: 1, 
     size: 10,
   });
 
@@ -50,7 +50,7 @@ export const useJobStore = defineStore("job", () => {
       };
       const res = await jobApi.getJobs(params);
       // 深度适配 Spring Page<T> 的规范 JSON 元数据解构
-      // learn; 防御加固：如果后端没有吐出 .content，兜底给它一个干净的 []，绝不让 jobs 退化为 undefined
+      
       jobs.value = res.data.data?.content || [];
       total.value = res.data.data?.totalElements || 0;
     } catch (err) {
@@ -80,7 +80,7 @@ export const useJobStore = defineStore("job", () => {
    */
   const openForm = (mode: "add" | "edit", jobData: Job | null = null) => {
     formMode.value = mode;
-    // learn;如果是编辑模式，克隆一份数据防止直接修改列表
+    
     currentJob.value = jobData ? { ...jobData } : null;
     isFormShow.value = true;
   };

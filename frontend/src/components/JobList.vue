@@ -116,7 +116,7 @@ const selectedJobId = ref<number | null>(null);
 const handleOpenDetail = (id: number | undefined) => {
   if (id === undefined) return;
   selectedJobId.value = id;
-  showDrawer.value = true; //learn; 打开侧边栏
+  showDrawer.value = true; 
 };
 /**
  * 唤醒侧边栏Drawer并下发目标行唯一主键.
@@ -180,23 +180,23 @@ const currentDisplayedJobIds = computed<number[]>(() => {
 
 const masterCheckboxState = computed(() => {
   if (currentDisplayedJobIds.value.length === 0) {
-    return false; // learn;当前页没有数据，全选框不选中
+    return false; 
   }
-  // learn;检查当前页是否所有项都被选中
+  
   const allOnPageSelected = currentDisplayedJobIds.value.every((id) =>
     selectedJobIds.value.has(id),
   );
   if (allOnPageSelected) {
-    return true; // learn;当前页全选
+    return true; 
   }
-  // learn;检查当前页是否至少有一项被选中 (但不是全部)
+  
   const someOnPageSelected = currentDisplayedJobIds.value.some((id) =>
     selectedJobIds.value.has(id),
   );
   if (someOnPageSelected) {
-    return "indeterminate"; // learn;当前页部分选中，显示为半选状态
+    return "indeterminate"; 
   }
-  return false; // learn;当前页全不选
+  return false; 
 });
 /**
  * 处理主复选框（全选/全不选当前页）的变化
@@ -205,10 +205,10 @@ const masterCheckboxState = computed(() => {
 
 const handleMasterCheckboxChange = (checked: boolean) => {
   if (checked) {
-    // learn;如果主复选框被勾选 (变为全选状态)
+    
     currentDisplayedJobIds.value.forEach((id) => selectedJobIds.value.add(id));
   } else {
-    // learn;如果主复选框被取消勾选 (变为全不选状态)
+    
     currentDisplayedJobIds.value.forEach((id) =>
       selectedJobIds.value.delete(id),
     );
@@ -225,7 +225,7 @@ const handleRowCheckboxChange = (jobId: number, isChecked: boolean) => {
   }
 };
 
-// learn;监听页码改变，一旦跨页变动，自动就地激活重新拉取数据
+
 watch(
   () => jobStore.queryParams.page,
   () => jobStore.fetchJobs(),
