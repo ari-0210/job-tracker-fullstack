@@ -24,7 +24,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # 从 builder 阶段复制构建好的 .jar 文件
-COPY --from=builder /app/target/JobTracker-0.0.1-SNAPSHOT.jar app.jar
+COPY target/*.jar app.jar
 # 在 builder 阶段中，由 mvn clean package 命令生成的 .jar 文件的完整路径
 #app.jar: 是目标文件名。因为源是一个文件，目标也是一个文件名，所以 Docker 会把源文件复制过来，并将其重命名为 app.jar。
 #--from=builder: 这个特殊的参数告诉 Docker，不从本地电脑复制，而是从之前名为 builder 的构建阶段中去复制文件。
