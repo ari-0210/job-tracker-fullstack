@@ -6,6 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
+  esbuild: {
+    // 生产环境打包时，自动在语法树层面把 console.log 和 debugger 物理蒸发
+    drop: ["console", "debugger"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
