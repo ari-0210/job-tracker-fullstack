@@ -16,7 +16,7 @@
     "strict": true,
 
     /* learn;路径映射 */
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
