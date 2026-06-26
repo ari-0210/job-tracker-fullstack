@@ -44,7 +44,7 @@ services:
     depends_on:
       - db
       - redis-cache
-    depends_on:
+    volumes:
       - ./uploads:/app/uploads
 
   # 前端服务
