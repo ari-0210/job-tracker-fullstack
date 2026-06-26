@@ -1,20 +1,4 @@
-# ----- 阶段 1: 构建 -----
-# 使用一个包含 Maven 和 JDK 的基础镜像来构建项目
-FROM maven:3.8.5-openjdk-17 AS builder
 
-# 设置工作目录
-WORKDIR /app
-
-# 复制 pom.xml 并下载依赖，利用 Docker 的层缓存
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
-# 复制所有源代码
-COPY src ./src
-
-# 运行 Maven 打包命令，生成 .jar 文件
-RUN mvn clean package -DskipTests
-#阶段 1 结束后，得到了一个jar 的产物，但它存在于一个非常庞大的maven 镜像环境中
 # ----- 阶段 2: 运行 -----
 # 使用一个更小的、只包含 Java 运行环境的基础镜像
 #这个阶段的目标是使用一个只包含 Java 运行环境的小镜像，把第一阶段的构建产物拿过来，然后运行它。
