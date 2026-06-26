@@ -58,6 +58,7 @@ services:
       - backend
     volumes:
       - ./logs/nginx:/var/log/nginx
+      - ./uploads:/app/uploads
 
 volumes: # <-- 这一行没有任何缩进，与顶部的 'version' 和 'services' 左对齐
   mysql-data:
