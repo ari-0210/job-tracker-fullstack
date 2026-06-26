@@ -44,7 +44,9 @@ public class JobServiceImpl implements JobService {
         Job job = new Job();
         BeanUtils.copyProperties(dto, job);
         job.setUserId(securityUtils.getCurrentUserId());
-        job.setStatus("DRAFT");
+        if (job.getStatus() == null || job.getStatus().trim().isEmpty()) {
+            job.setStatus("DRAFT");
+        }
         Job savedJob = jobRepository.save(job);
         // 数据发生实体膨胀，精准驱逐对应的统计大屏缓存
         String cacheKey = "stats:summary:" + job.getUserId();
