@@ -1,0 +1,67 @@
+# docker-compose.yml
+
+version: "3.8"
+
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      # 'volumes' 在 db 服务下，缩进4个空格
+      # 下面这一行是列表项，所以有连字符 '-'
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Redis 服务
+  redis-cache:
+    image: redis:7.0-alpine # alpine 版本体积极小，适合生产环境
+    container_name: deadline-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379" # 映射端口
+    volumes:
+      - redis_data:/data # 数据持久化卷，防止容器重启后缓存全丢
+
+  # 后端服务
+  backend:
+    build: ./backend
+    image: jobtracker-backend  
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET_KEY}
+      - SPRING_DATA_REDIS_HOST=redis-cache # 后端配置里直接写这个服务名连接 Redis
+      - SPRING_DATA_REDIS_PASSWORD=${REDIS_PASSWORD}
+      - FILE_UPLOAD_PATH=${UPLOAD_DIR:-/app/uploads}
+    depends_on:
+      - db
+      - redis-cache
+    volumes:
+      - ./uploads:/app/uploads
+
+  # 前端服务
+  frontend: # <-- 'frontend' 缩进2个空格，与 'db' 同级
+    build: ./frontend
+    image: jobtracker-frontend
+    restart: always
+    ports:
+      - "8888:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+      - ./uploads:/app/uploads
+
+volumes: # <-- 这一行没有任何缩进，与顶部的 'version' 和 'services' 左对齐
+  mysql-data:
+  redis_data:
+    # 可以把这行留空，或者为它添加驱动等配置，例如：
+    # driver: local
