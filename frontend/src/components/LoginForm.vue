@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <n-card
-      title="Login to Job Tracker"
+      title="Login to DDL Tracker"
       style="max-width: 400px; margin: auto; margin-top: 100px"
     >
       <n-form @submit.prevent="handleLogin">
