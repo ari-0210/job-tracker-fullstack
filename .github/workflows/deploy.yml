@@ -1,0 +1,41 @@
+name: Deploy Frontend to Cloud Server
+
+# 触发条件：当向 main 分支 push 代码时自动执行
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # 使用 GitHub 提供的免费 Ubuntu 虚拟机
+
+    steps:
+      - name: 1. 拉取最新代码
+        uses: actions/checkout@v3
+
+      - name: 2. 安装 Node.js 环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 3. 云端编译前端生成 dist
+        run: |
+          cd frontend 
+          npm install
+          npm run build
+
+      - name: 4. 远程 SSH 连接服务器并发布上线
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            # 1. 进入服务器上的项目目录
+            cd /root/deadline-tracker/ # 替换为你服务器上存放代码和 docker-compose 的真实绝对路径
+
+            # 2. 拉取 git 最新代码
+            git pull origin main
+
+            # 3. 在服务器上重新构建并启动前端容器
+            docker compose up -d --build frontend
