@@ -10,20 +10,6 @@ jobs:
     runs-on: ubuntu-latest # 使用 GitHub 提供的免费 Ubuntu 虚拟机
 
     steps:
-      - name: 1. 拉取最新代码
-        uses: actions/checkout@v3
-
-      - name: 2. 安装 Node.js 环境
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: 3. 云端编译前端生成 dist
-        run: |
-          cd frontend 
-          npm install
-          npm run build
-
       - name: 4. 远程 SSH 连接服务器并发布上线
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -31,12 +17,16 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 1. 进入服务器上的项目目录
+            # 进入服务器上的项目目录
             cd /root/deadline-tracker/ 
 
-            # 2. 拉取 git 最新代码
-            git pull origin main
+            # 强制对齐 GitHub 最新代码
+            git fetch origin
+            git reset --hard origin/main
 
-            # 2. 兼容旧版 docker-compose 命令重新构建并启动前端容器
+            # 兼容旧版 docker-compose 命令重新构建并启动前端容器
             # 使用 docker-compose（带连字符）避免 unknown shorthand flag 报错
             docker-compose up -d --build frontend || docker compose up --build -d
+
+            #清理废弃的临时构建镜像（防止占用云服务器磁盘）
+            docker image prune -f
