@@ -16,7 +16,7 @@ jobs:
       - name: 2. 安装 Node.js 环境
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 3. 云端编译前端生成 dist
         run: |
