@@ -37,6 +37,6 @@ jobs:
             # 2. 拉取 git 最新代码
             git pull origin main
 
-            # 2. 兼容旧版 docker-compose 命令重新构建并启动前端容器
+            # 3. 兼容旧版 docker-compose 命令重新构建并启动前端容器
             # 使用 docker-compose（带连字符）避免 unknown shorthand flag 报错
             docker-compose up -d --build frontend || docker compose up --build -d
