@@ -16,7 +16,7 @@ jobs:
       - name: 2. 安装 Node.js 环境
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 3. 云端编译前端生成 dist
         run: |
@@ -32,10 +32,11 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # 1. 进入服务器上的项目目录
-            cd /root/deadline-tracker/ # 替换为你服务器上存放代码和 docker-compose 的真实绝对路径
+            cd /root/deadline-tracker/ 
 
             # 2. 拉取 git 最新代码
             git pull origin main
 
-            # 3. 在服务器上重新构建并启动前端容器
-            docker compose up -d --build frontend
+            # 2. 兼容旧版 docker-compose 命令重新构建并启动前端容器
+            # 使用 docker-compose（带连字符）避免 unknown shorthand flag 报错
+            docker-compose up -d --build frontend || docker compose up --build -d

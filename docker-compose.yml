@@ -29,7 +29,7 @@ services:
   # 后端服务
   backend:
     build: ./backend
-    image: jobtracker-backend  
+    image: jobtracker-backend
     restart: always
     ports:
       - "8080:8080"
@@ -53,7 +53,7 @@ services:
     image: jobtracker-frontend
     restart: always
     ports:
-      - "8888:80"
+      - "80:80"
     depends_on:
       - backend
     volumes:
