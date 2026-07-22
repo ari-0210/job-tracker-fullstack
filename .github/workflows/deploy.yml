@@ -20,6 +20,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
+          cache: maven
 
       # 在 GitHub 虚拟机里快速编译打包 Java (生成 target/*.jar)
       - name: Build Backend on GitHub Runner
@@ -37,13 +38,14 @@ jobs:
             # 进入服务器上的项目目录
             cd /root/deadline-tracker/ 
 
-            # 强制对齐 GitHub 最新代码
-            git fetch origin
+            # 增加 Git 拉取重试机制，防止网络波动
+            git fetch origin main || git fetch origin main || git fetch origin main
             git reset --hard origin/main
 
 
             # 重新构建并启动 
-            docker-compose up -d --build
+            docker-compose build --no-cache
+            docker-compose up -d
 
             #清理废弃的临时构建镜像（防止占用云服务器磁盘）
             docker image prune -f
