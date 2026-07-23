@@ -85,6 +85,8 @@ services:
     volumes:
       - ./logs/nginx:/var/log/nginx
       - ./uploads:/app/uploads
+      # 把服务器上的 ssl 文件夹，映射到容器里的 /etc/nginx/certs 文件夹
+      - ./ssl:/etc/nginx/certs
 
 volumes: # <-- 这一行没有任何缩进，与顶部的 'version' 和 'services' 左对齐
   mysql-data:
