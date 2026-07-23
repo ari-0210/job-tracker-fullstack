@@ -26,9 +26,8 @@ jobs:
         run: |
           cd backend
           mvn clean package -DskipTests
-          # 删除冗余的 plain/original jar，只保留主程序并重命名为唯一确定的 app.jar
+          # 删除冗余的 plain/original jar
           rm -f target/*-plain.jar target/*.original
-          mv target/*.jar target/app.jar
 
       # 2. 在 GitHub 的高配虚拟机上编译前端 Dist 静态文件
       - name: Set up Node.js
@@ -62,11 +61,13 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 进入服务器上的项目目录
-            cd /root/deadline-tracker/ 
+            # 1. 彻底停止并删除旧容器，释放旧的网络和配置占用（关键！能规避 ContainerConfig 冲突）
+            docker-compose down
 
-            # 重新构建并启动 
-            docker-compose build 
+            # 2. 重新构建镜像
+            docker-compose build --no-cache
+
+            # 3. 全新启动
             docker-compose up -d
 
             #清理废弃的临时构建镜像（防止占用云服务器磁盘）
