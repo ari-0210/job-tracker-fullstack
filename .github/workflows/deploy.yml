@@ -61,6 +61,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
+            cd /root/deadline-tracker/
             # 1. 彻底停止并删除旧容器，释放旧的网络和配置占用（关键！能规避 ContainerConfig 冲突）
             docker-compose down
 
