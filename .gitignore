@@ -76,10 +76,7 @@ HELP.md
 # 忽略 Docker 的环境变量文件
 .env
 
-# 忽略后端所有真实的配置文件
-/backend/src/main/resources/application.properties
-/backend/src/main/resources/application-*.properties
-/backend/src/main/resources/application-*.yml
+
 
 # 忽略 Docker Compose 运行产生的本地挂载数据
 /logs/
