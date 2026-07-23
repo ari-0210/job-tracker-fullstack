@@ -28,7 +28,6 @@ jobs:
           mvn clean package -DskipTests
           # 删除冗余的 plain/original jar，只保留主程序并重命名为唯一确定的 app.jar
           rm -f target/*-plain.jar target/*.original
-          mv target/*.jar target/app.jar
 
       # 2. 在 GitHub 的高配虚拟机上编译前端 Dist 静态文件
       - name: Set up Node.js
