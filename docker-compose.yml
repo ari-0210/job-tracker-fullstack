@@ -8,6 +8,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
       # 'volumes' 在 db 服务下，缩进4个空格
       # 下面这一行是列表项，所以有连字符 '-'
@@ -19,6 +24,11 @@ services:
     image: redis:7.0-alpine # alpine 版本体积极小，适合生产环境
     container_name: deadline-redis
     command: redis-server --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     ports:
       - "6379:6379" # 映射端口
     volumes:
@@ -36,12 +46,29 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET_KEY}
-      - SPRING_DATA_REDIS_HOST=redis-cache # 后端配置里直接写这个服务名连接 Redis
+      - JWT_EXPIRATION_MS=${JWT_EXPIRATION_MS}
+      - SPRING_DATA_REDIS_HOST=redis-cache
       - SPRING_DATA_REDIS_PASSWORD=${REDIS_PASSWORD}
       - FILE_UPLOAD_PATH=${UPLOAD_DIR:-/app/uploads}
+      # 限制堆内存最大 256M，防止 JVM 抢占宿主机所有内存导致疯狂 GC
+      - JAVA_OPTS=-Xms128m -Xmx256m -XX:+UseG1GC
+    env_file:
+      - .env
     depends_on:
-      - db
-      - redis-cache
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m" # 单个日志文件最大 10M
+        max-file: "3" # 最多保留 3 个文件
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 384M # 给 JVM 堆外内存留出缓冲空间
     volumes:
       - ./uploads:/app/uploads
 
